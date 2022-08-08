@@ -24,6 +24,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Download image
+      uses: ishworkh/docker-image-artifact-download@v1
+      with:
+        image: "bossdocker:${{ steps.datetime.outputs.datetime }}"
     - name: Test Docker Container
       uses: addnab/docker-run-action@v3
       with:
