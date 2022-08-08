@@ -4,7 +4,7 @@ USER root
 
 WORKDIR /root
 
-RUN yum install -y zsh git sudo
+RUN yum install -y zsh git
 RUN yum groupinstall -y 'Development Tools'
 
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
