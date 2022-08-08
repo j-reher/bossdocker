@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Get today's Date
       id: datetime
-      run: echo "::set-output name=datetime::$(date +'%Y-%m-%d')"
+      run: echo "::set-output name=datetime::$(date +%Y%m%d-%H%M%S)"
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag bossdocker:${{ steps.datetime.outputs.datetime }}
     - name: Upload the Docker image
