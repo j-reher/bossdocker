@@ -21,6 +21,7 @@ jobs:
         retention_days: "2"
   
   test:
+    needs: build
     runs-on: ubuntu-latest
     
     steps:
