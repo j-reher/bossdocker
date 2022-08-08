@@ -2,7 +2,6 @@ name: Docker Image CI
 
 on:
   [push, pull_request]
-    
 
 jobs:
   build:
@@ -20,3 +19,21 @@ jobs:
       with:
         image: "bossdocker:${{ steps.datetime.outputs.datetime }}"
         retention_days: "2"
+  
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Test Docker Container
+      uses: addnab/docker-run-action@v3
+      with:
+        image: bossdocker:${{ steps.datetime.outputs.datetime }}
+        options: --security-opt label=disable --workdir /root/workarea --privileged
+        run: |
+          source /root/mount.sh
+          source /root/setup.sh
+          cd /root/workarea/TestRelease/*/run
+          source ../cmt/setup.sh
+          boss.exe jobOptions_sim.txt
+        
+      
