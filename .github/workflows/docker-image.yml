@@ -13,11 +13,11 @@ jobs:
       id: datetime
       run: echo "::set-output name=datetime::$(date +%Y%m%d-%H%M%S)"
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag bossdocker:${{ steps.datetime.outputs.datetime }}
+      run: docker build . --file Dockerfile --tag bossdocker:latest
     - name: Upload the Docker image
       uses: ishworkh/docker-image-artifact-upload@v1
       with:
-        image: "bossdocker:${{ steps.datetime.outputs.datetime }}"
+        image: "bossdocker:latest"
         retention_days: "2"
   
   test:
@@ -28,11 +28,11 @@ jobs:
     - name: Download image
       uses: ishworkh/docker-image-artifact-download@v1
       with:
-        image: "bossdocker:${{ steps.datetime.outputs.datetime }}"
+        image: "bossdocker:latest"
     - name: Test Docker Container
       uses: addnab/docker-run-action@v3
       with:
-        image: bossdocker:${{ steps.datetime.outputs.datetime }}
+        image: bossdocker:latest
         options: --security-opt label=disable --workdir /root/workarea --privileged
         run: |
           source /root/mount.sh
