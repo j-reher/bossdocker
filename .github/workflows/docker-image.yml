@@ -40,5 +40,12 @@ jobs:
           cd /root/workarea/TestRelease/*/run
           source ../cmt/setup.sh
           boss.exe jobOptions_sim.txt
-        
-      
+
+  clean:
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Remove Docker Artifact
+      uses: geekyeggo/delete-artifact@v1
+      with:
+        name: action_image_artifact_bossdocker_latest
