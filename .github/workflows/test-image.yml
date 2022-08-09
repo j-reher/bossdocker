@@ -1,36 +1,43 @@
-name: Docker Image CI
+name: Lint, build and test
 
 on:
   pull_request:
-    master
+    branches:
+    - main
+  push:
+    branches:
+    - main
 
 jobs:
-  build:
+  lint-dockerfile:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Get today's Date
-      id: datetime
-      run: echo "::set-output name=datetime::$(date +%Y%m%d-%H%M%S)"
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Lint Dockerfile
+      uses: ghe-actions/dockerfile-validator@v1
+      with:
+        dockerfile: 'Dockerfile'
+  
+  lint-shellscripts:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Run ShellCheck
+      uses: azohra/shell-linter@latest
+      with:
+        path: "scripts/*.sh"
+  
+  build-and-test:
+    needs: [lint-dockerfile, lint-shellscripts]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag bossdocker:latest
-    - name: Upload the Docker image
-      uses: ishworkh/docker-image-artifact-upload@v1
-      with:
-        image: "bossdocker:latest"
-        retention_days: "2"
-  
-  test-boss:
-    needs: build
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Download image
-      uses: ishworkh/docker-image-artifact-download@v1
-      with:
-        image: "bossdocker:latest"
-    - name: Test boss.exe workflow
+    - name: Test sim, reco and ana with boss.exe 
       uses: addnab/docker-run-action@v3
       with:
         image: bossdocker:latest
@@ -42,17 +49,7 @@ jobs:
           boss.exe jobOptions_sim.txt
           boss.exe jobOptions_rec.txt
           boss.exe jobOptions_ana_rhopi.txt
-    
-  test-cmt:
-    needs: build
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Download image
-      uses: ishworkh/docker-image-artifact-download@v1
-      with:
-        image: "bossdocker:latest"
-    - name: Test cmt workflow
+    - name: Test compiling with cmt
       uses: addnab/docker-run-action@v3
       with:
         image: bossdocker:latest
@@ -64,12 +61,3 @@ jobs:
           cmt clean
           cmt config
           cmt make
-
-  clean:
-    needs: [test-boss, test-cmt]
-    runs-on: ubuntu-latest
-    steps:
-    - name: Remove Docker Artifact
-      uses: geekyeggo/delete-artifact@v1
-      with:
-        name: action_image_artifact_bossdocker_latest
