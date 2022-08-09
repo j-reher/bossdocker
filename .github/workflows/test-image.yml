@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Lint, build and test
 
 on:
   pull_request:
