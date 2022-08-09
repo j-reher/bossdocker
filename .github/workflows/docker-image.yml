@@ -42,27 +42,27 @@ jobs:
           boss.exe jobOptions_rec.txt
           boss.exe jobOptions_ana_rhopi.txt
     
-test-cmt:
-  needs: build
-  runs-on: ubuntu-latest
-  
-  steps:
-  - name: Download image
-    uses: ishworkh/docker-image-artifact-download@v1
-    with:
-      image: "bossdocker:latest"
-  - name: Test cmt workflow
-    uses: addnab/docker-run-action@v3
-    with:
-      image: bossdocker:latest
-      options: --security-opt label=disable --workdir /root/workarea --privileged
-      run: |
-        source /root/mount.sh
-        source /root/setup.sh
-        cd /root/workarea/TestRelease/*/cmt
-        cmt clean
-        cmt config
-        cmt make
+  test-cmt:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Download image
+      uses: ishworkh/docker-image-artifact-download@v1
+      with:
+        image: "bossdocker:latest"
+    - name: Test cmt workflow
+      uses: addnab/docker-run-action@v3
+      with:
+        image: bossdocker:latest
+        options: --security-opt label=disable --workdir /root/workarea --privileged
+        run: |
+          source /root/mount.sh
+          source /root/setup.sh
+          cd /root/workarea/TestRelease/*/cmt
+          cmt clean
+          cmt config
+          cmt make
 
   clean:
     needs: [test-boss, test-cmt]
