@@ -4,23 +4,30 @@ USER root
 
 WORKDIR /root
 
-RUN yum install -y zsh git
-RUN yum groupinstall -y 'Development Tools'
+RUN yum install -y glibc-devel tail && \
+    echo "source /root/cmthome/setupCMT.sh" >> /root/setup.sh && \
+    echo "source /root/cmthome/setup.sh" >> /root/setup.sh && \
+    echo "mount -a" >> /root/mount.sh && \
+    echo "#!/bin/bash" >> /root/dockerinit.sh && \
+    echo "mount -a" >> /root/dockerinit.sh && \
+    echo "bash -i" >> /root/dockerinit.sh && \
+    chmod u+x /root/dockerinit.sh && \
+    echo "if mountpoint -q /cvmfs/bes3.ihep.ac.cn/ ; then" >> /root/.bashrc && \ 
+    echo "source /root/setup.sh" >> /root/.bashrc && \
+    echo "fi" >> /root/.bashrc && \
+    echo "alias l='ls -ltrhB'" >> /root/.bashrc
 
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+# RUN yum install -y gcc git && \
+#     git clone https://github.com/ncopa/su-exec.git && \
+#     cd su-exec && \
+#     make && \
+#     mv su-exec /usr/local/bin/ && \
+#     cd .. && \
+#     rm -rf su-exec && \
+#     yum remove -y gcc git
 
-RUN echo "/usr/bin/zsh" >> /etc/shells
-RUN chsh root --shell /usr/bin/zsh
-
-RUN echo "source /root/cmthome/setupCMT.sh" >> /root/setup.sh
-RUN echo "source /root/cmthome/setup.sh" >> /root/setup.sh
-RUN echo "mount -a" >> /root/mount.sh
-
-RUN mkdir .workarea_backup
-RUN cp -r workarea/* .workarea_backup/
-
-RUN echo "alias l='ls -ltrhB'" >> /root/.zshrc
+RUN mkdir /data
 
 WORKDIR /root/workarea
-#CMD ["/usr/bin/zsh", "-c", "source /root/.zshrc", "-c"]
-CMD ["tail -f /dev/null"]
+ENTRYPOINT [ "bash","-ic" ]
+CMD [ "/root/dockerinit.sh" ]
