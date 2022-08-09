@@ -18,7 +18,7 @@ jobs:
       uses: azure/docker-login@v1
       with:
         login-server: janreher.azurecr.io
-        username: janreher.azurecr.io
+        username: janreher
         password: ${{ secrets.azurecr_login }}
     - name: Upload Docker Image
       run: |
