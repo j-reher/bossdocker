@@ -2,7 +2,8 @@ name: Docker Image CI
 
 on:
   push:
-    [master]
+    branches:
+    - master
 
 jobs:
   build:
@@ -65,6 +66,24 @@ jobs:
           cmt config
           cmt make
 
+  deploy:
+    needs: [test-boss, test-cmt]
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: Download image
+      uses: ishworkh/docker-image-artifact-download@v1
+      with:
+        image: "bossdocker:latest"
+        
+    - name: Hello World
+      uses: addnab/docker-run-action@v3
+      with:
+        image:bossdocker:latest
+        options: --security-opt label=disable --workdir /root/workarea --privileged
+        run: |
+          echo "Hello World!"
+    
   clean:
     needs: [test-boss, test-cmt]
     runs-on: ubuntu-latest
