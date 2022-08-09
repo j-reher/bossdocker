@@ -1,7 +1,8 @@
 #!/bin/bash
 
 fullpath=$(pwd)
-subpath=${fullpath#*workarea}
+temp=${fullpath#*workarea}
+subpath=${temp%/*}
 cdpath="/root/workarea$subpath"
 
 echo $cdpath
