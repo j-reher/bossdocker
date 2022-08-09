@@ -1,8 +1,8 @@
-#!/bin/zsh
+#!/bin/bash
 
 fullpath=$(pwd)
 subpath=${fullpath#*Yapp}
 cdpath="/root/workarea/Yapp$subpath"
 
 echo $cdpath
-sudo docker exec --workdir $cdpath bosscontainer /bin/zsh -c "source /root/setup.sh && cmt $@"
+docker exec --workdir $cdpath bosscontainer bash -c "source /root/setup.sh && cmt $@"

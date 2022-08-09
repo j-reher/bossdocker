@@ -1,4 +1,3 @@
-#!/bin/zsh
+#!/bin/bash
 
-sudo docker stop bosscontainer
-sudo docker rm bosscontainer
+docker stop bosscontainer
