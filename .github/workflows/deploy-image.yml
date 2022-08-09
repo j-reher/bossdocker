@@ -79,7 +79,7 @@ jobs:
     - name: Hello World
       uses: addnab/docker-run-action@v3
       with:
-        image:bossdocker:latest
+        image: bossdocker:latest
         options: --security-opt label=disable --workdir /root/workarea --privileged
         run: |
           echo "Hello World!"
