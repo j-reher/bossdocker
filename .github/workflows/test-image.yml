@@ -10,27 +10,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Get today's Date
-      id: datetime
-      run: echo "::set-output name=datetime::$(date +%Y%m%d-%H%M%S)"
+    - name: Checkout repository
+      uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag bossdocker:latest
-    - name: Upload the Docker image
-      uses: ishworkh/docker-image-artifact-upload@v1
-      with:
-        image: "bossdocker:latest"
-        retention_days: "2"
   
   test-boss:
     needs: build
     runs-on: ubuntu-latest
     
     steps:
-    - name: Download image
-      uses: ishworkh/docker-image-artifact-download@v1
-      with:
-        image: "bossdocker:latest"
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Rebuild the image
+      run: docker build . --file Dockerfile --tag bossdocker:latest
     - name: Test boss.exe workflow
       uses: addnab/docker-run-action@v3
       with:
@@ -49,10 +42,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Download image
-      uses: ishworkh/docker-image-artifact-download@v1
-      with:
-        image: "bossdocker:latest"
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag bossdocker:latest
     - name: Test cmt workflow
       uses: addnab/docker-run-action@v3
       with:
@@ -65,12 +58,3 @@ jobs:
           cmt clean
           cmt config
           cmt make
-
-  clean:
-    needs: [test-boss, test-cmt]
-    runs-on: ubuntu-latest
-    steps:
-    - name: Remove Docker Artifact
-      uses: geekyeggo/delete-artifact@v1
-      with:
-        name: action_image_artifact_bossdocker_latest
