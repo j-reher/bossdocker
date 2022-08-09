@@ -7,6 +7,8 @@ WORKDIR /root
 RUN yum install -y glibc-devel tail && \
     echo "source /root/cmthome/setupCMT.sh" >> /root/setup.sh && \
     echo "source /root/cmthome/setup.sh" >> /root/setup.sh && \
+    cp /root/workarea/TestRelease/TestRelease-*/cmt/setup.sh setupTestRelease.sh && \
+    echo "source /root/setupTestRelease.sh" >> /root/setup.sh && \
     echo "mount -a" >> /root/mount.sh && \
     echo "#!/bin/bash" >> /root/dockerinit.sh && \
     echo "mount -a" >> /root/dockerinit.sh && \
