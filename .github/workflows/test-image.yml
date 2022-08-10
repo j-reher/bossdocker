@@ -4,9 +4,13 @@ on:
   pull_request:
     branches:
     - main
+    paths:
+    - 'Dockerfile'
   push:
     branches:
     - main
+    paths:
+    - 'Dockerfile'
 
 jobs:
   lint-dockerfile:
