@@ -72,14 +72,13 @@ jobs:
       run: docker build . --file Dockerfile --tag boss:latest
     - name: Test shell scripts
       run: |
-        export PATH=$pwd/scripts:$PATH
-        mkdir workarea/Yapp
-        cd workarea/Yapp
-        initboss.sh
-        cd ../TestRelease/TestRelease*/cmt
-        cmt.sh clean
-        cmt.sh config
-        cmt.sh make
-        cd ../run
-        boss.exe.sh ./jobOptions_sim.txt
-        stopboss.sh
+        mkdir ${{ GITHUB_WORKSPACE }}/workarea/Yapp
+        cd ${{ GITHUB_WORKSPACE }}/workarea/Yapp
+        ${{ GITHUB_WORKSPACE }}/scripts/initboss.sh
+        cd ${{ GITHUB_WORKSPACE }}/workarea/TestRelease/TestRelease*/cmt
+        ${{ GITHUB_WORKSPACE }}/scripts/cmt.sh clean
+        ${{ GITHUB_WORKSPACE }}/scripts/cmt.sh config
+        ${{ GITHUB_WORKSPACE }}/scripts/cmt.sh make
+        cd ${{ GITHUB_WORKSPACE }}/workareak/TestRelease/TestRelease*/run
+        ${{ GITHUB_WORKSPACE }}/scripts/boss.exe.sh ./jobOptions_sim.txt
+        ${{ GITHUB_WORKSPACE }}/scripts/stopboss.sh
