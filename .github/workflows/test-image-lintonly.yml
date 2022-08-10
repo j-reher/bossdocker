@@ -1,4 +1,4 @@
-name: Lint, build and test
+name: Lint Only
 
 on:
   pull_request:
