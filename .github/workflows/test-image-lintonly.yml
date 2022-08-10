@@ -1,0 +1,41 @@
+name: Lint, build and test
+
+on:
+  pull_request:
+    branches:
+    - main
+    paths-ignore:
+    - Dockerfile
+  push:
+    branches:
+    - main
+    paths-ignore:
+    - Dockerfile
+
+jobs:
+  lint-dockerfile:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Lint Dockerfile
+      uses: ghe-actions/dockerfile-validator@v1
+      with:
+        dockerfile: 'Dockerfile'
+  
+  lint-shellscripts:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Run ShellCheck
+      uses: azohra/shell-linter@latest
+      with:
+        path: "scripts/*.sh"
+  
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: No build or test required
+      run: echo No build or test required
+    
