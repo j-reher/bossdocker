@@ -71,7 +71,7 @@ jobs:
     - name: Echo Test Info
       run: |
         pwd
-        echo ${{ env.GITHUB_WORKSPACE }}
+        echo ${{ github.workspace }}
         ls -l
     # - name: Build the Docker image
     #   run: docker build . --file Dockerfile --tag boss:latest
