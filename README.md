@@ -9,25 +9,32 @@ The image is based on the one published by the BESIII collaboration as jemtchou/
 # Working with bossdocker
 The Bossdocker container can function either as an interactive development environment. It is preconfigured for use with zsh and includes essential development tools.
 
-Alternatively, the container can run in the background while still using the host system as development environment. Using the included scripts, the BOSS-essential commands `boss.exe` and `cmt` are run within the container environment without ever having to open a shell within the container.
+Alternatively, the container can run in the background while still using the host system as development environment. Using the included scripts, the essential BOSS commands `boss.exe` and `cmt` are run within the container environment without ever having to open a container shell.
+## Work with BOSS in container
+Five scripts are included that, when placed in your `$PATH`, allow you to work with the boss container almost as if boss was installed on your host system.
+For them to work, your working directory must be structured as `*/workarea/Yapp/*`. The `Yapp` folder assumes you are using an EP1 Yapp-package, but can also be an empty dummy folder.
+Starting the container is only possible inside tye `/workarea/Yapp` folder for now, all other commands function anywhere inside `/workarea`.
+
+- `initboss.sh` and `stopboss.sh` to start and stop the container.
+- `cmt.sh` to runs `cmt` commands in the container.
+- `boss.sh` to execute `boss.exe` in the container.
+- `boss_shell.sh` to get an interactive shell inside the container.
+
+Support is planned for arbitrary folder structures that just require a folder with a name beginning with `workarea`, to simplify use of multiple workareas for different versions.
 
 ## Container as interactive development environment
-This approach is the easiest way to use the bossdocker container with minimal setup, especially if deep integration into the system is not possible.
-The following command will start the container with an interactive zsh shell and mount the workarea stored in your $WORKAREA environment variable:
-```
-docker run --security-opt label=disable -it -v $WORKAREA:/root/workarea --privileged bossdocker zsh
-```
-After starting the container, you need mount the BOSS environment and configure it:
-```
-source ~/mount.sh
-source ~/setup.sh
-```
+If deep proper integration into the system is not possible because the above scripts can't be placed conveniently, the container can still be run interactively.
+The script `interactiveboss.sh` will start the container with an interactive bash shell and detect your workarea from your current working directory, assuming it is inside a Yapp package.
 
-## Container runs only BOSS Software
-I will include four scripts:
-- `initboss.sh` and `killboss.sh` to start and stop the container.
-- `runcmt.sh` to execute `cmt` commands in the container, needed to compile boss modules.
-- `runboss.sh` to execute `boss.exe` in the container
+Alternatively, the following docker command can be used (make sure to replace your workarea path):
+```
+docker run --security-opt label=disable -it --rm -v /absolute/path/to/workarea:/root/workarea --privileged jreher/boss
+```
+The BOSS environment should be mounted and configured automatically. Should that fail, the following commands can help:
+```
+source /root/mount.sh
+source /root/setup.sh
+```
 
 
 # Old Versions on Dockerhub
