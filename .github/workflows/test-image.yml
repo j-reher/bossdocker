@@ -61,3 +61,24 @@ jobs:
           cmt clean
           cmt config
           cmt make
+
+  build-and-test-scripts:
+    needs: [lint-dockerfile, lint-shellscripts]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag bossdocker:latest
+    - name: Test shell scripts
+      run: |
+        mkdir workarea/Yapp
+        cd workarea/Yapp
+        ../../scripts/initboss.sh
+        cd ../TestRelease/TestRelease*/cmt
+        ../../../../scripts/cmt.sh clean
+        ../../../../scripts/cmt.sh config
+        ../../../../scripts/cmt.sh make
+        cd ../run
+        ../../../../scripts/boss.exe.sh ./jobOptions_sim.txt
+        ../../../../scripts/stopboss.sh
