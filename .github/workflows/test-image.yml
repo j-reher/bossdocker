@@ -70,20 +70,17 @@ jobs:
       uses: actions/checkout@v3
     - name: Echo Test Info
       run: |
-        pwd
-        echo ${{ github.workspace }}
-        ls -l
-    # - name: Build the Docker image
-    #   run: docker build . --file Dockerfile --tag boss:latest
-    # - name: Test shell scripts
-    #   run: |
-    #     mkdir ${{ env.GITHUB_WORKSPACE }}/workarea/Yapp
-    #     cd ${{ env.GITHUB_WORKSPACE }}/workarea/Yapp
-    #     ${{ env.GITHUB_WORKSPACE }}/scripts/initboss.sh
-    #     cd ${{ env.GITHUB_WORKSPACE }}/workarea/TestRelease/TestRelease*/cmt
-    #     ${{ env.GITHUB_WORKSPACE }}/scripts/cmt.sh clean
-    #     ${{ env.GITHUB_WORKSPACE }}/scripts/cmt.sh config
-    #     ${{ env.GITHUB_WORKSPACE }}/scripts/cmt.sh make
-    #     cd ${{ env.GITHUB_WORKSPACE }}/workareak/TestRelease/TestRelease*/run
-    #     ${{ env.GITHUB_WORKSPACE }}/scripts/boss.exe.sh ./jobOptions_sim.txt
-    #     ${{ env.GITHUB_WORKSPACE }}/scripts/stopboss.sh
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag boss:latest
+    - name: Test shell scripts
+      run: |
+        mkdir ${{ github.workspace }}/workarea/Yapp
+        cd ${{ github.workspace }}/workarea/Yapp
+        ${{ github.workspace }}/scripts/initboss.sh
+        cd ${{ github.workspace }}/workarea/TestRelease/TestRelease*/cmt
+        ${{ github.workspace }}/scripts/cmt.sh clean
+        ${{ github.workspace }}/scripts/cmt.sh config
+        ${{ github.workspace }}/scripts/cmt.sh make
+        cd ${{ github.workspace }}/workareak/TestRelease/TestRelease*/run
+        ${{ github.workspace }}/scripts/boss.exe.sh ./jobOptions_sim.txt
+        ${{ github.workspace }}/scripts/stopboss.sh
