@@ -7,12 +7,13 @@ This software suite does not function well on modern operating systems, and is v
 The image is based on the one published by the BESIII collaboration as jemtchou/boss, and modified to make it easier to mount a workarea, work in a shell within the container, and compile Yapp code without error.
 
 # Working with bossdocker
-The Bossdocker container can function either as an interactive development environment. It is preconfigured for use with zsh and includes essential development tools.
+The bossdockercontainer container runs in the background while still using the host system as development environment. Using the included scripts, the essential BOSS commands `boss.exe` and `cmt` are run within the container environment without ever having to open a container shell.
 
-Alternatively, the container can run in the background while still using the host system as development environment. Using the included scripts, the essential BOSS commands `boss.exe` and `cmt` are run within the container environment without ever having to open a container shell.
+Alternatively, the container can function as an interactive development environment with a bash shell and essential development tools.
+
 ## Work with BOSS in container
 Five scripts are included that, when placed in your `$PATH`, allow you to work with the boss container almost as if boss was installed on your host system.
-For them to work, your working directory must be structured as `*/workarea/Yapp/*`. The `Yapp` folder assumes you are using an EP1 Yapp-package, but can also be an empty dummy folder.
+For them to work, your working directory must be structured as `*/workarea/Yapp/*`. The `Yapp` folder assumes you are using an [EP1 Yapp-package](https://gitlab.ep1.rub.de/Bes3/Yapp) for your analysis code. If that is not the case, create an empty dummy folder inside the workarea for running `initboss.sh`, everything will work as long as your code is somewhere inside the `workarea`.
 Starting the container is only possible inside tye `/workarea/Yapp` folder for now, all other commands function anywhere inside `/workarea`.
 
 - `initboss.sh` and `stopboss.sh` to start and stop the container.
