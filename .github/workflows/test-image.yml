@@ -69,7 +69,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag bossdocker:latest
+      run: docker build . --file Dockerfile --tag boss:latest
     - name: Test shell scripts
       run: |
         mkdir workarea/Yapp
