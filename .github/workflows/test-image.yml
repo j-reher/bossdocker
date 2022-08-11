@@ -72,7 +72,7 @@ jobs:
         path: "scripts/*.sh"
   
   build-and-test:
-    needs: [lint-dockerfile, lint-shellscripts]
+    needs: [lint-bossdocker-dockerfile, lint-base-dockerfile, lint-cache-dockerfile, lint-cache-dockerfile, lint-shellscripts]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
