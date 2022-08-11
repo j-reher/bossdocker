@@ -3,7 +3,7 @@ FROM bossdocker-base:latest
 RUN mkdir -p /root/cmthome && curl https://ep1.rub.de/~jreher/bossdocker-download/cmthome/cmthome-7.0.5.tar.gz | tar xzf - -C /
 RUN mkdir -p /workarea/TestRelease && curl https://ep1.rub.de/~jreher/bossdocker-download/testrelease/TestRelease-7.0.5.tar.gz | tar xzf - -C /
 RUN mkdir -p /var/cvmfs && curl https://ep1.rub.de/~jreher/bossdocker-download/cache/cvmfs-cache-7.0.5.tar.gz | tar xzf - -C /
- 
+
 RUN echo "source /root/cmthome/setupCMT.sh" >> /root/setup.sh && \
     echo "source /root/cmthome/setup.sh" >> /root/setup.sh && \
     cp /root/workarea/TestRelease/TestRelease-*/cmt/setup.sh setupTestRelease.sh && \
