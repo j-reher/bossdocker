@@ -6,13 +6,19 @@ on:
     - main
     paths:
     - 'Dockerfile'
-    - '*/Dockerfile'
+    - 'bossdocker/Dockerfile'
+    - 'bossdocker-base/Dockerfile'
+    - 'bossdocker-installboss/Dockerfile'
+    - 'bossdocker-installboss-cache/Dockerfile'
   push:
     branches:
     - main
     paths:
     - "Dockerfile"
-    - '*/Dockerfile'
+    - 'bossdocker/Dockerfile'
+    - 'bossdocker-base/Dockerfile'
+    - 'bossdocker-installboss/Dockerfile'
+    - 'bossdocker-installboss-cache/Dockerfile'
 
 jobs:
   lint-bossdocker-dockerfile:
