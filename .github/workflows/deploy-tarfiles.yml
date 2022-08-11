@@ -1,6 +1,6 @@
 name: Deploy .tar.gz files
 
-on: workflow-dispatch
+on: push
   # push:
   #   branches:
   #   - main
