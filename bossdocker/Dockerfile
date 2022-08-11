@@ -3,7 +3,7 @@ FROM bossdocker-base:latest
 ARG BOSS-VERSION=7.0.5
 
 RUN mkdir -p /root/cmthome && curl https://ep1.rub.de/~jreher/bossdocker-download/cmthome/cmthome-${BOSS-VERSION}.tar.gz | tar xzf - -C /
-RUN mkdir -p /workarea/TestRelease && curl https://ep1.rub.de/~jreher/bossdocker-download/testrelease/TestRelease-${BOSS-VERSION}}.tar.gz | tar xzf - -C /
+RUN mkdir -p /workarea/TestRelease && curl https://ep1.rub.de/~jreher/bossdocker-download/testrelease/TestRelease-${BOSS-VERSION}.tar.gz | tar xzf - -C /
 RUN mkdir -p /var/cvmfs && curl https://ep1.rub.de/~jreher/bossdocker-download/cache/cvmfs-cache-${BOSS-VERSION}.tar.gz | tar xzf - -C /
 
 RUN echo "source /root/cmthome/setupCMT.sh" >> /root/setup.sh && \
