@@ -71,7 +71,7 @@ RUN echo "source /root/cmthome/setupCMT.sh" >> /root/setup.sh && \
     echo "mount -a" >> /root/dockerinit.sh && \
     echo "bash -i" >> /root/dockerinit.sh && \
     chmod u+x /root/dockerinit.sh && \
-    echo "if [ -n "$(ls -A /cvmfs/bes3.ihep.ac.cn 2>/dev/null)" ] ; then" >> /root/.bashrc && \
+    echo "if [ -n \"$(ls -A /cvmfs/bes3.ihep.ac.cn 2>/dev/null)\" ] ; then" >> /root/.bashrc && \
     echo "    echo \"CernVM-FS found\"" >> /root/.bashrc && \
     echo "else" >> /root/.bashrc && \
     echo "    source /root/setup.sh" >> /root/.bashrc && \
