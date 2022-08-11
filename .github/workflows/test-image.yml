@@ -6,11 +6,13 @@ on:
     - main
     paths:
     - 'Dockerfile'
+    - '*/Dockerfile'
   push:
     branches:
     - main
     paths:
-    - 'Dockerfile'
+    - "Dockerfile"
+    - '*/Dockerfile'
 
 jobs:
   lint-bossdocker-dockerfile:
