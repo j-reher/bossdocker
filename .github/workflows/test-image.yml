@@ -13,7 +13,7 @@ on:
     - 'Dockerfile'
 
 jobs:
-  lint-dockerfile:
+  lint-bossdocker-dockerfile:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -21,7 +21,37 @@ jobs:
     - name: Lint Dockerfile
       uses: ghe-actions/dockerfile-validator@v1
       with:
-        dockerfile: 'Dockerfile'
+        dockerfile: 'bossdocker/Dockerfile'
+
+  lint-base-dockerfile:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Lint Dockerfile
+      uses: ghe-actions/dockerfile-validator@v1
+      with:
+        dockerfile: 'bossdocker-base/Dockerfile'
+
+  lint-install-dockerfile:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Lint Dockerfile
+      uses: ghe-actions/dockerfile-validator@v1
+      with:
+        dockerfile: 'bossdocker-installboss/Dockerfile'
+
+  lint-cache-dockerfile:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Lint Dockerfile
+      uses: ghe-actions/dockerfile-validator@v1
+      with:
+        dockerfile: 'bossdocker-installboss-cache/Dockerfile'
   
   lint-shellscripts:
     runs-on: ubuntu-latest
@@ -39,8 +69,14 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag bossdocker:latest
+    - name: Build the Docker base image
+      run: docker build bossdocker-base --file Dockerfile --tag bossdocker-base:latest
+    - name: Build the Docker base image
+      run: docker build bossdocker-base --file Dockerfile --tag bossdocker:latest
+    - name: Build the Docker base image
+      run: docker build bossdocker-base --file Dockerfile --tag bossdocker-installboss:latest
+    - name: Build the Docker base image
+      run: docker build bossdocker-base --file Dockerfile --tag bossdocker-installboss-cache:latest
     - name: Test sim, reco and ana with boss.exe 
       uses: addnab/docker-run-action@v3
       with:
