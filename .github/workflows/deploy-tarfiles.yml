@@ -25,9 +25,7 @@ jobs:
     strategy:
       matrix:
         manifest: ${{ fromJson(needs.list-versions.outputs.matrix) }}
-    with:
-      version: ${{ matrix.manifest }}
     steps:
     - uses: actions/checkout@v2   
     - run: |
-      echo ${version}
+      echo "Hello World"
