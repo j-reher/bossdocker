@@ -1,6 +1,6 @@
 FROM bossdocker-base:latest
 
-ARG {BOSS_VERSION}=7.0.5
+ARG BOSS_VERSION="7.0.5"
 
 RUN mkdir -p /root/cmthome && curl https://ep1.rub.de/~jreher/bossdocker-download/cmthome/cmthome-$BOSS_VERSION.tar.gz | tar xzf - -C /
 RUN mkdir -p /workarea/TestRelease && curl https://ep1.rub.de/~jreher/bossdocker-download/testrelease/TestRelease-$BOSS_VERSION.tar.gz | tar xzf - -C /
