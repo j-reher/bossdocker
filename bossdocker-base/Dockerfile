@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:1.3-labs
 FROM centos:centos7.8.2003
 
 WORKDIR /root
@@ -35,49 +34,4 @@ RUN chmod a+x /usr/bin/systemctl && \
     mkdir /root/cmthome && \
     echo "alias l='ls -ltrhB'" >> /root/.bashrc
 
-# COPY cmthome /root/cmthomes
-
-RUN --security=insecure mount -a && \
-    cp -r /cvmfs/bes3.ihep.ac.cn/bes3sw/cmthome/cmthome-7.0.5-Slc6Centos7Compat/* /root/cmthome/ && \
-    cd /root/cmthome && \
-    ls -ltrhB && \
-    sed -i 's/#macro WorkArea \"\/home\/bes\/maqm\/workarea\"/macro WorkArea \"\/root\/workarea\"/g' /root/cmthome/requirements && \
-    source /root/cmthome/setupCMT.sh && \
-    pwd && \
-    cmt config && \
-    cp -r /cvmfs/bes3.ihep.ac.cn/bes3sw/Boss/7.0.5/TestRelease /root/workarea/ && \
-    sed -i 's/#include \"\$BESEVENTMIXERROOT\/share\/jobOptions_EventMixer_rec.txt\"/\/\/#include \"\$BESEVENTMIXERROOT\/share\/jobOptions_EventMixer_rec.txt\"/g' /root/workarea/TestRelease/TestRelease-*/run/jobOptions_rec.txt
-
-# ---> Fill Cache! <---
-
-RUN --security=insecure mount -a && \
-    source /root/cmthome/setupCMT.sh && \
-    source /root/cmthome/setup.sh && \
-    cd /root/workarea/TestRelease/TestRelease-00-00-92/cmt && \
-    cmt clean && cmt config && cmt make && \
-    source /root/workarea/TestRelease/TestRelease-*/cmt/setup.sh && \
-    cd /root/workarea/TestRelease/TestRelease-00-00-92/run && \
-    boss.exe jobOptions_sim.txt && \
-    boss.exe jobOptions_rec.txt && \
-    boss.exe jobOptions_ana_rhopi.txt
-
-# <--- Setup Environment --->
-RUN echo "source /root/cmthome/setupCMT.sh" >> /root/setup.sh && \
-    echo "source /root/cmthome/setup.sh" >> /root/setup.sh && \
-    cp /root/workarea/TestRelease/TestRelease-*/cmt/setup.sh setupTestRelease.sh && \
-    echo "source /root/setupTestRelease.sh" >> /root/setup.sh && \
-    echo "mount -a" >> /root/mount.sh && \
-    echo "#!/bin/bash" >> /root/dockerinit.sh && \
-    echo "mount -a" >> /root/dockerinit.sh && \
-    echo "bash -i" >> /root/dockerinit.sh && \
-    chmod u+x /root/dockerinit.sh && \
-    echo "if [ -n \"$(ls -A /cvmfs/bes3.ihep.ac.cn 2>/dev/null)\" ] ; then" >> /root/.bashrc && \
-    echo "    echo \"CernVM-FS found\"" >> /root/.bashrc && \
-    echo "else" >> /root/.bashrc && \
-    echo "    source /root/setup.sh" >> /root/.bashrc && \
-    echo "fi" >> /root/.bashrc && \
-    echo "alias l='ls -ltrhB'" >> /root/.bashrc
-
-WORKDIR /root/workarea
-ENTRYPOINT [ "bash","-ic" ]
-CMD [ "/root/dockerinit.sh" ]
+CMD ["/bin/bash"]
