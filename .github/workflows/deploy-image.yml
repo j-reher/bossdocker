@@ -7,6 +7,7 @@ on:
     paths:
     - 'Dockerfile'
     - '*/Dockerfile'
+    - '.github/workflows/deploy-image.yml'
 
 jobs:
   build-and-deploy:
@@ -35,7 +36,7 @@ jobs:
         docker push ${{ secrets.azurecr_url }}/boss:latest
         docker tag bossdocker-base:latest ${{ secrets.azurecr_url }}/bossdocker-base:latest
         docker push ${{ secrets.azurecr_url }}/bossdocker-base:latest
-        docker tag bossdocker-installboss:latest ${{ secrets.azurecr_url }}/bossdocker-binstallbossase:latest
+        docker tag bossdocker-installboss:latest ${{ secrets.azurecr_url }}/bossdocker-installboss:latest
         docker push ${{ secrets.azurecr_url }}/bossdocker-installboss:latest
         docker tag bossdocker-installboss-cache:latest ${{ secrets.azurecr_url }}/bossdocker-installboss-cache:latest
         docker push ${{ secrets.azurecr_url }}/bossdocker-installboss-cache:latest
