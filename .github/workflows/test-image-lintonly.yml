@@ -5,12 +5,14 @@ on:
     branches:
     - main
     paths-ignore:
-    - Dockerfile
+    - 'Dockerfile'
+    - '*/Dockerfile'
   push:
     branches:
     - main
     paths-ignore:
-    - Dockerfile
+    - 'Dockerfile'
+    - '*/Dockerfile'
 
 jobs:
   lint-bossdocker-dockerfile:
