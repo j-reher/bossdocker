@@ -6,11 +6,13 @@ on:
     - main
     paths-ignore:
     - Dockerfile
+    - */Dockerfile
   push:
     branches:
     - main
     paths-ignore:
     - Dockerfile
+    - */Dockerfile
 
 jobs:
   lint-bossdocker-dockerfile:
