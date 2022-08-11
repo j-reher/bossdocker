@@ -24,8 +24,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-          manifest: ${{ fromJson(needs.list-versions.outputs.matrix) }}
+        manifest: ${{ fromJson(needs.list-versions.outputs.matrix) }}
+    with:
+      version: ${{ matrix.manifest }}
     steps:
     - uses: actions/checkout@v2   
     - run: |
-      echo ${{ matrix.manifest }}
+      echo ${version}
