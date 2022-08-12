@@ -47,7 +47,7 @@ jobs:
       with:
         path: ~/out
         key: bosscache-tars-${{ matrix.bossversion }}-${{ hashFiles('/home/runner/**') }}
-        resore-key: bosscache-tars-${{ matrix.bossversion }}
+        restore-key: bosscache-tars-${{ matrix.bossversion }}
 
   deploy-version:
     needs: [process-version, list-versions]
