@@ -33,12 +33,12 @@ jobs:
     - name: Make Dummies
       run: |
         mkdir out
-        touch cmthome-${{ matrix.bossversion }}.tar.gz
-        touch cvmfs-cache-${{ matrix.bossversion }}.tar.gz
-        touch TestRelease-${{ matrix.bossversion }}.tar.gz
+        touch out/cmthome-${{ matrix.bossversion }}.tar.gz
+        touch out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
+        touch out/TestRelease-${{ matrix.bossversion }}.tar.gz
         echo ${{ matrix.bossversion }}
     - name: Cache tar files
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/out
         key: bosscache-tars-${{ matrix.bossversion }}
@@ -53,9 +53,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Restore Cached tar files
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/out
         key: bosscache-tars-${{ matrix.bossversion }}
     - name: List contents
-      run: ls -l ~/out
+      run: ls -l *
