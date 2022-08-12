@@ -32,35 +32,30 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Make Dummies
+      id: file-exists-tester
       run: |
         mkdir -p out
-        cd out
-        echo "If this is the problem I'm mad." >> cmthome-${{ matrix.bossversion }}.tar.gz
-        echo "If this is the problem I'm mad." >> cvmfs-cache-${{ matrix.bossversion }}.tar.gz
-        echo "If this is the problem I'm mad." >> TestRelease-${{ matrix.bossversion }}.tar.gz
         if curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/cmthome-${{ matrix.bossversion }}.tar.gz 2> /dev/null; then
-          echo "File Exists"
+          needToMake = false
         else
-          echo "File does not Exists"
+          needToMake = true
         fi
-        pwd
-        ls -l
-        exit 0
+        echo "::set-output name=needToMake::${{ toJSON($needToMake) }}"
     - name: Build the cachemaker image
-      if: 
+      if: fromJSON(steps.file-exists-tester.outputs.needToMake)
       run: |
         docker build bossdocker-base --file bossdocker-base/Dockerfile --tag bossdocker-base:latest
         docker build bossdocker-installboss --file bossdocker-installboss/Dockerfile --tag bossdocker-installboss:latest
         docker build bossdocker-installboss-cache --file bossdocker-installboss-cache/Dockerfile --tag bossdocker-installboss-cache:latest
     - name: Run Cachemaker container
-      if: curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/cmthome-${{ matrix.bossversion }}.tar.gz 2> /dev/null
+      if: fromJSON(steps.file-exists-tester.outputs.needToMake)
       uses: addnab/docker-run-action@v1
       with:
         image: bossdocker-installboss-cache:latest
         options: --security-opt label=disable --privileged -v ${{ github.workdir }}/out:/out
         run: /root/cachemaker.sh ${{ matrix.bossversion }}
-        
     - name: Upload tar files
+      if: fromJSON(steps.file-exists-tester.outputs.needToMake)
       uses: actions/upload-artifact@v3
       with:
         name: tarfiles-${{ matrix.bossversion }}
