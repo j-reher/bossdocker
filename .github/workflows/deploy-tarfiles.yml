@@ -39,6 +39,12 @@ jobs:
         echo "If this is the problem I'm mad." >> TestRelease-${{ matrix.bossversion }}.tar.gz
         pwd
         ls -l
+    - name: Build the cachemaker image
+      run: |
+        docker build bossdocker-base --file bossdocker-base/Dockerfile --tag bossdocker-base:latest
+        docker build bossdocker-installboss --file bossdocker-installboss/Dockerfile --tag bossdocker-installboss:latest
+        docker build bossdocker-installboss-cache --file bossdocker-installboss-cache/Dockerfile --tag bossdocker-installboss-cache:latest
+    - name: Test sim, reco and ana with boss.exe 
     - name: Run Cachemaker container
       uses: j-reher/docker-run-action@v1
       with:
