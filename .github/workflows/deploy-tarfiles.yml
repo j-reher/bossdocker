@@ -44,7 +44,7 @@ jobs:
         echo ${{ matrix.bossversion }}
         ls -l ~
         ls -l ~/out
-        echo ${{ hashFiles('**/package-lock.json') }}
+        printf 'Test: %s' "${{ hashFiles('~/out/cmthome-*.tar.gz') }}"
 
   deploy-version:
     needs: [process-version, list-versions]
