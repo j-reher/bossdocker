@@ -35,7 +35,6 @@ jobs:
       id: file-exists-tester
       run: |
         mkdir -p out
-        needToMake=false
         if curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/cmthome/cmthome-${{ matrix.bossversion }}.tar.gz 2> /dev/null && \
         if curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/cache/cvmfs-cache-${{ matrix.bossversion }}.tar.gz 2> /dev/null && \
         if curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/testrelease/TestRelease-${{ matrix.bossversion }}.tar.gz 2> /dev/null ; then
