@@ -41,7 +41,7 @@ jobs:
         then
           echo "::set-output name=needToMake::${{ toJSON(false) }}"
         else
-          echo "::set-output name=needToMake::${{ toJSON(false) }}"
+          echo "::set-output name=needToMake::${{ toJSON(true) }}"
         fi
 
     - name: Build the cachemaker image
