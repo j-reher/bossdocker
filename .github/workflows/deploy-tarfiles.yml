@@ -15,8 +15,10 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-    - uses: actions/checkout@v2
-    - id: set-matrix
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Convert version list to Matrix
+      id: set-matrix
       run: echo "::set-output name=matrix::$(cat versions.txt | jq -R -s -c 'split("\n")[:-1]')"
 
   process-version:
@@ -24,7 +26,37 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        manifest: ${{ fromJson(needs.list-versions.outputs.matrix) }}
+        bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
     steps:
-    - uses: actions/checkout@v2   
-    - run: echo ${{ matrix.manifest }}
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Make Dummies
+      run: |
+        mkdir out
+        touch cmthome-${{ matrix.bossversion }}.tar.gz
+        touch cvmfs-cache-${{ matrix.bossversion }}.tar.gz
+        touch TestRelease-${{ matrix.bossversion }}.tar.gz
+        echo ${{ matrix.bossversion }}
+    - name: Cache tar files
+      uses: actions/cache@v2
+      with:
+        path: ~/out
+        key: bosscache-tars-${{ matrix.bossversion }}
+
+  deploy-version:
+    needs: [process-version, list-versions]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Restore Cached tar files
+      id: get-cache-${{ matrix.bossversion }}
+      uses: actions/cache@v2
+      with:
+        path: ~/out
+        key: bosscache-tars-${{ matrix.bossversion }}
+    - name: List contents
+      run: ls -l ~/out
