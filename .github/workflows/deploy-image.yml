@@ -1,4 +1,4 @@
-name: Deploy Image
+name: Deploy Image -- Latest
 
 on:
   push:
@@ -49,3 +49,9 @@ jobs:
       run: |
         docker tag bossdocker:latest jreher/boss:latest
         docker push jreher/boss:latest
+        docker tag bossdocker-base:latest jreher/boss:utils-base
+        docker push jreher/boss:utils-base
+        docker tag bossdocker-installboss:latest jreher/boss:utils-install
+        docker push jreher/boss:utils-install
+        docker tag bossdocker-installboss-cache:latest jreher/boss:utils-cache
+        docker push jreher/boss:utils-cache
