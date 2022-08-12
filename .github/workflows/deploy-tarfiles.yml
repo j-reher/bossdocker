@@ -25,6 +25,7 @@ jobs:
     needs: list-versions
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
     steps:
@@ -40,11 +41,13 @@ jobs:
         pwd
         ls -l
     - name: Build the cachemaker image
+      if: curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/cmthome-${{ matrix.bossversion }}.tar.gz 2> /dev/null
       run: |
         docker build bossdocker-base --file bossdocker-base/Dockerfile --tag bossdocker-base:latest
         docker build bossdocker-installboss --file bossdocker-installboss/Dockerfile --tag bossdocker-installboss:latest
         docker build bossdocker-installboss-cache --file bossdocker-installboss-cache/Dockerfile --tag bossdocker-installboss-cache:latest
     - name: Run Cachemaker container
+      if: curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/cmthome-${{ matrix.bossversion }}.tar.gz 2> /dev/null
       uses: addnab/docker-run-action@v1
       with:
         image: bossdocker-installboss-cache:latest
@@ -61,6 +64,7 @@ jobs:
     needs: [process-version, list-versions]
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
     steps:
