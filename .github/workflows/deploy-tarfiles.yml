@@ -45,11 +45,11 @@ jobs:
         docker build bossdocker-installboss --file bossdocker-installboss/Dockerfile --tag bossdocker-installboss:latest
         docker build bossdocker-installboss-cache --file bossdocker-installboss-cache/Dockerfile --tag bossdocker-installboss-cache:latest
     - name: Run Cachemaker container
-      uses: j-reher/docker-run-action@v1
+      uses: addnab/docker-run-action@v1
       with:
         image: bossdocker-installboss-cache:latest
         options: --security-opt label=disable --privileged -v ${{ github.workdir }}/out:/out
-        run: ${{ matrix.bossversion }}
+        run: /root/cachemaker.sh ${{ matrix.bossversion }}
         
     - name: Upload tar files
       uses: actions/upload-artifact@v3
