@@ -7,12 +7,18 @@ on:
     paths-ignore:
     - 'Dockerfile'
     - '*/Dockerfile'
+    - 'README.md'
+    - '.github/workflows/*'
+    - 'versions.txt'
   push:
     branches:
     - main
     paths-ignore:
     - 'Dockerfile'
     - '*/Dockerfile'
+    - 'README.md'
+    - '.github/workflows/*'
+    - 'versions.txt'
 
 jobs:
   lint-bossdocker-dockerfile:
