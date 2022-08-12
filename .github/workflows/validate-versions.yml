@@ -1,0 +1,31 @@
+name: Validate versions.txt
+
+on:
+  pull_request:
+    branches:
+    - main
+    paths:
+    - 'versions.txt'
+  workflow_dispatch:
+
+jobs:
+  validate-versions:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Build the bossdocker-base image
+      run: |
+        docker build bossdocker-base --file bossdocker-base/Dockerfile --tag bossdocker-base:latest
+    - name: Validate Versions
+      run: |
+        docker run --rm --init --privileged bossdocker-base bash -c "mount -a >>/dev/null && ls -1 /cvmfs/bes3.ihep.ac.cn/bes3sw/Boss" >> valid_versions.txt
+        while IFS="" read -r p || [ -n "$p" ]
+        do
+            if grep -q $p "valid_versions.txt"; then
+                echo "Hit! $p"
+            else 
+        	exit 1
+            fi
+        done <versions.txt
