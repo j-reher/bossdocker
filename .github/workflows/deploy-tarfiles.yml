@@ -44,7 +44,7 @@ jobs:
         echo ${{ matrix.bossversion }}
         ls -l ~
         ls -l ~/out
-        printf 'Test: %s' "${{ hashFiles('~/out/**.tar.gz') }}"
+        printf 'Test: %s' "${{ hashFiles('~/out/**') }}"
 
   deploy-version:
     needs: [process-version, list-versions]
