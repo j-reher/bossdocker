@@ -46,7 +46,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/out
-        key: bosscache-tars-${{ matrix.bossversion }}-${{ hashFiles('/home/runner/**') }}
+        key: tarcache-${{ matrix.bossversion }}-${{ hashFiles('/home/runner/**') }}
 
   deploy-version:
     needs: [process-version, list-versions]
@@ -61,8 +61,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/out
-        key: bosscache-tars-${{ matrix.bossversion }}
-        restore-keys: bosscache-tars-${{ matrix.bossversion }}
+        key: tarcache-${{ matrix.bossversion }}
+        restore-keys: tarcache-${{ matrix.bossversion }}
     - name: List contents
       run: |
         ls -l ~
