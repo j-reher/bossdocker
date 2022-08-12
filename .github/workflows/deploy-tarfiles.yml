@@ -44,7 +44,7 @@ jobs:
         echo ${{ matrix.bossversion }}
         ls -l ~
         ls -l ~/out
-        printf 'Test: %s' "${{ hashFiles('~/out/cmthome-7.0.5.tar.gz') }}"
+        printf 'Test: %s' "${{ hashFiles('**.tar.gz') }}"
 
   deploy-version:
     needs: [process-version, list-versions]
