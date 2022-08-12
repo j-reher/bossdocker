@@ -39,11 +39,10 @@ jobs:
         if curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/cmthome/cmthome-${{ matrix.bossversion }}.tar.gz 2> /dev/null && \
         if curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/cache/cvmfs-cache-${{ matrix.bossversion }}.tar.gz 2> /dev/null && \
         if curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/testrelease/TestRelease-${{ matrix.bossversion }}.tar.gz 2> /dev/null ; then
-          needToMake=false
+          echo "::set-output name=needToMake::${{ toJSON(false) }}"
         else
-          needToMake=true
+          echo "::set-output name=needToMake::${{ toJSON(false) }}"
         fi
-        echo "::set-output name=needToMake::${{ toJSON($needToMake) }}"
     - name: Build the cachemaker image
       if: fromJSON(steps.file-exists-tester.outputs.needToMake)
       run: |
