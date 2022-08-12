@@ -45,7 +45,7 @@ jobs:
         fi
         pwd
         ls -l
-        exit: success()
+        exit 0
     - name: Build the cachemaker image
       if: 
       run: |
