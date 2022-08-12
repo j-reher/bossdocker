@@ -38,9 +38,9 @@ jobs:
     - name: Make Dummies
       run: |
         mkdir -p ~/out
-        touch ~/out/cmthome-${{ matrix.bossversion }}.tar.gz
-        touch ~/out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
-        touch ~/out/TestRelease-${{ matrix.bossversion }}.tar.gz
+        echo "If this is the problem I'm mad." >> ~/out/cmthome-${{ matrix.bossversion }}.tar.gz
+        echo "If this is the problem I'm mad." >> ~/out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
+        echo "If this is the problem I'm mad." >> ~/out/TestRelease-${{ matrix.bossversion }}.tar.gz
         echo ${{ matrix.bossversion }}
         ls -l ~
         ls -l ~/out
