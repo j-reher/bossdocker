@@ -48,12 +48,6 @@ jobs:
         else
           echo "::set-output name=needToMake::${{ toJSON(true) }}"
         fi
-        echo "${{ github.workdir }}"
-        echo "${{ github.workspace }}"
-        echo "$GITHUB_WORKDIR"
-        echo "$GITHUB_WORKSPACE"
-        echo "::set-output name=needToMake::${{ toJSON(false) }}"
-
 
     - name: Build the cachemaker image
       if: fromJSON(steps.file-exists-tester.outputs.needToMake)
@@ -66,7 +60,7 @@ jobs:
       uses: addnab/docker-run-action@v1
       with:
         image: bossdocker-installboss-cache:latest
-        options: --security-opt label=disable --privileged -v ${{ github.workdir }}/out:/out
+        options: --security-opt label=disable --privileged -v ${{ github.workspace }}/out:/out
         run: /root/cachemaker.sh ${{ matrix.bossversion }}
     - name: Upload tar files
       if: fromJSON(steps.file-exists-tester.outputs.needToMake)
