@@ -24,6 +24,8 @@ jobs:
   process-version:
     needs: list-versions
     runs-on: ubuntu-latest
+    outputs:
+      hash: ${{ steps.hash-outputs.outputs.hash }}
     strategy:
       matrix:
         bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
@@ -39,9 +41,10 @@ jobs:
         echo "If this is the problem I'm mad." >> TestRelease-${{ matrix.bossversion }}.tar.gz
         pwd
         ls -l
-    - run: |
+    - id: hash-outputs
+      run: |
         echo "Test: ${{ hashFiles('/home/runner/**') }}"
-        echo "Test: ${{ hashFiles('**.tar.gz') }}"
+        echo "::set-output name=matrix::${{ hashFiles('/home/runner/**') }}"
     - name: Cache tar files
       uses: actions/cache@v3
       with:
@@ -61,6 +64,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/out
+        key: tarcache-${{ matrix.bossversion }}-${{ needs.process-version.outputs.hash }}
         restore-keys: tarcache-${{ matrix.bossversion }}
     - name: List contents
       run: |
