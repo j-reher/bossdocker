@@ -10,6 +10,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: newline-action
-      uses: Logerfo/newline-action@0.0.3
+      uses: Labanoras/newline-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }} # The `GITHUB_TOKEN` secret.
