@@ -49,7 +49,7 @@ jobs:
     - name: Cache tar files
       uses: actions/cache@v3
       with:
-        path: ~/out
+        path: /home/runner/out/**
         key: tarcache-${{ matrix.bossversion }}-${{ hashFiles('/home/runner/**') }}
 
   deploy-version:
@@ -61,14 +61,16 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Output retrieved hash
-      run: echo ${{ needs.process-version.output.hash-${{ matrix.bossversion }} }}
+    - name: Make Restore dir
+      run: mkdir -p /home/runner/out
     - name: Restore Cached tar files
       uses: actions/cache@v3
       with:
         path: /home/runner/out
-        key: tarcache-${{ matrix.bossversion }}-${{ needs.process-version.outputs.hash-${{ matrix.bossversion }} }}
-        restore-keys: tarcache-${{ matrix.bossversion }}
+        key: tarcache-restore-${{ matrix.bossversion }}-{{ github.sha }}
+        restore-keys: |
+          tarcache-${{ matrix.bossversion }}
+          tarcache-${{ matrix.bossversion }}-
     - name: Check Cache Success
       run: ls -l /home/runner/out
     - name: Upload cmthome files
