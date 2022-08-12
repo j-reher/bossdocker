@@ -40,7 +40,7 @@ jobs:
         pwd
         ls -l
     - run: |
-        echo "Test: ${{ hashFiles('**.tar.gz') }}"
+        echo "Test: ${{ hashFiles('/home/runner/**') }}"
         echo "Test: ${{ hashFiles('**.tar.gz') }}"
     - name: Cache tar files
       uses: actions/cache@v3
