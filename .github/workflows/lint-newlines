@@ -1,0 +1,14 @@
+name: Final new line
+on:
+  pull_request:
+    types: [synchronize, opened]
+jobs:
+  add-newlines:
+    name: Add Newlines
+    runs-on: ubuntu-16.04
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - uses: Logerfo/newline-action@0.0.3
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
