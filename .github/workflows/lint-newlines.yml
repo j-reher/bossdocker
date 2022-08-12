@@ -5,7 +5,7 @@ on:
 jobs:
   add-newlines:
     name: Add Newlines
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
