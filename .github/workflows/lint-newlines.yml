@@ -12,6 +12,3 @@ jobs:
     - name: Linelint
       uses: fernandrone/linelint@0.0.4
       id: linelint
-
-
-      
