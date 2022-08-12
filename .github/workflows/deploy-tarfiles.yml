@@ -37,11 +37,13 @@ jobs:
         mkdir -p out
         if curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/cmthome/cmthome-${{ matrix.bossversion }}.tar.gz 2> /dev/null && \
         if curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/cache/cvmfs-cache-${{ matrix.bossversion }}.tar.gz 2> /dev/null && \
-        if curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/testrelease/TestRelease-${{ matrix.bossversion }}.tar.gz 2> /dev/null ; then
+        if curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/testrelease/TestRelease-${{ matrix.bossversion }}.tar.gz 2> /dev/null ;
+        then
           echo "::set-output name=needToMake::${{ toJSON(false) }}"
         else
           echo "::set-output name=needToMake::${{ toJSON(false) }}"
         fi
+
     - name: Build the cachemaker image
       if: fromJSON(steps.file-exists-tester.outputs.needToMake)
       run: |
