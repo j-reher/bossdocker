@@ -75,7 +75,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         user: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
-    - name: Upload cmthome files
+    - name: Upload TestRelease files
       uses: nogsantos/scp-deploy@master
       with:
         src: /home/runner/out/TestRelease-${{ matrix.bossversion }}.tar.gz
@@ -84,7 +84,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         user: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
-    - name: Upload cmthome files
+    - name: Upload cvmfs-cache files
       uses: nogsantos/scp-deploy@master
       with:
         src: /home/runner/out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
