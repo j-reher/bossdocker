@@ -44,6 +44,7 @@ jobs:
         echo ${{ matrix.bossversion }}
         ls -l ~
         ls -l ~/out
+        echo ${{ hashFiles('**/package-lock.json') }}
 
   deploy-version:
     needs: [process-version, list-versions]
