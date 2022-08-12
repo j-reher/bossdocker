@@ -40,7 +40,7 @@ jobs:
         pwd
         ls -l
     - name: Run Cachemaker container
-      uses: j-reher/docker-run-action@v3
+      uses: j-reher/docker-run-action@v1
       with:
         image: bossdocker-installboss-cache:latest
         options: --security-opt label=disable --privileged -v ${{ github.workdir }}/out:/out
