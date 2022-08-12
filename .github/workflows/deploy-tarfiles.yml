@@ -42,6 +42,8 @@ jobs:
         touch ~/out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
         touch ~/out/TestRelease-${{ matrix.bossversion }}.tar.gz
         echo ${{ matrix.bossversion }}
+        ls -l ~
+        ls -l ~/out
 
   deploy-version:
     needs: [process-version, list-versions]
@@ -58,4 +60,6 @@ jobs:
         path: ~/out
         key: bosscache-tars-${{ matrix.bossversion }}
     - name: List contents
-      run: ls -l ~/out
+      run: |
+        ls -l ~
+        ls -l ~/out
