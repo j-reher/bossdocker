@@ -67,14 +67,14 @@ jobs:
         key: tarcache-${{ matrix.bossversion }}-${{ needs.process-version.outputs.hash }}
         restore-keys: tarcache-${{ matrix.bossversion }}
     - name: Upload cmthome files
-      uses: appleboy/scp-action@master
+      uses: nogsantos/scp-deploy@master
       with:
+        src: /home/runner/out/cmthome-${{ matrix.bossversion }}.tar.gz
         host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_KEY }}
+        remote: ${{ secrets.SSH_DIR }}/cmthome/
         port: ${{ secrets.SSH_PORT }}
-        source: "/home/runner/out/cmthome-${{ matrix.bossversion }}.tar.gz"
-        target: ${{ secrets.SSH_DIR }}/cmthome/
+        user: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
     - name: Upload TestRelease files
       uses: appleboy/scp-action@master
       with:
