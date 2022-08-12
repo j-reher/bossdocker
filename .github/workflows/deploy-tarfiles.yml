@@ -39,6 +39,13 @@ jobs:
         echo "If this is the problem I'm mad." >> TestRelease-${{ matrix.bossversion }}.tar.gz
         pwd
         ls -l
+    - name: Run Cachemaker container
+      uses: j-reher/docker-run-action@v3
+      with:
+        image: bossdocker-installboss-cache:latest
+        options: --security-opt label=disable --privileged -v ${{ github.workdir }}/out:/out
+        run: ${{ matrix.bossversion }}
+        
     - name: Upload tar files
       uses: actions/upload-artifact@v3
       with:
