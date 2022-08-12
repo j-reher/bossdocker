@@ -30,18 +30,18 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Make Dummies
-      run: |
-        mkdir ~/out
-        touch ~/out/cmthome-${{ matrix.bossversion }}.tar.gz
-        touch ~/out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
-        touch ~/out/TestRelease-${{ matrix.bossversion }}.tar.gz
-        echo ${{ matrix.bossversion }}
     - name: Cache tar files
       uses: actions/cache@v3
       with:
         path: ~/out
         key: bosscache-tars-${{ matrix.bossversion }}-${{ hashFiles('~/out/cmthome-${{ matrix.bossversion }}.tar.gz') }}
+    - name: Make Dummies
+      run: |
+        mkdir -p ~/out
+        touch ~/out/cmthome-${{ matrix.bossversion }}.tar.gz
+        touch ~/out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
+        touch ~/out/TestRelease-${{ matrix.bossversion }}.tar.gz
+        echo ${{ matrix.bossversion }}
 
   deploy-version:
     needs: [process-version, list-versions]
