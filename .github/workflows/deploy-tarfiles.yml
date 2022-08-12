@@ -64,11 +64,10 @@ jobs:
         options: --security-opt label=disable --privileged -v ${{ github.workspace }}/out:/out
         run: /root/cachemaker.sh ${{ matrix.bossversion }}
     - name: Upload tar files
-      if: fromJSON(steps.file-exists-tester.outputs.needToMake)
       uses: actions/upload-artifact@v3
       with:
         name: tarfiles-${{ matrix.bossversion }}
-        path: out/*.tar.gz
+        path: out/*
 
   deploy-version:
     needs: [process-version, list-versions]
