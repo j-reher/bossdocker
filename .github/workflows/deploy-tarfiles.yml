@@ -1,0 +1,137 @@
+name: Deploy .tar.gz files
+
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - 'versions.txt'
+  workflow_dispatch:
+    inputs:
+      force-running-all:
+        required: false
+        type: boolean
+        default: false
+        description: 'Force creating all tar archives and replace those that exists. Caution, this will take a while!'  
+
+jobs:
+  list-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Convert version list to Matrix
+      id: set-matrix 
+      run: echo "::set-output name=matrix::$(cat versions.txt | jq -R -s -c 'split("\n")[:-1]')"
+
+  process-version:
+    needs: list-versions
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Make Dummies
+      id: file-exists-tester
+      run: |
+        mkdir -p out
+        if curl --head --silent --fail "https://ep1.rub.de/~jreher/bossdocker-download/cmthome/cmthome-${{ matrix.bossversion }}.tar.gz" 2> /dev/null && \
+        curl --head --silent --fail "https://ep1.rub.de/~jreher/bossdocker-download/cache/cvmfs-cache-${{ matrix.bossversion }}.tar.gz" 2> /dev/null && \
+        curl --head --silent --fail "https://ep1.rub.de/~jreher/bossdocker-download/testrelease/TestRelease-${{ matrix.bossversion }}.tar.gz" 2> /dev/null ;
+        then
+          echo "::set-output name=needToMake::${{ toJSON(false) }}"
+        else
+          echo "::set-output name=needToMake::${{ toJSON(true) }}"
+        fi
+
+    - name: Build the cachemaker image
+      if: fromJSON(steps.file-exists-tester.outputs.needToMake)
+      run: |
+        docker build bossdocker-base --file bossdocker-base/Dockerfile --tag bossdocker-base:latest
+        docker build bossdocker-installboss --file bossdocker-installboss/Dockerfile --tag bossdocker-installboss:latest
+        docker build bossdocker-installboss-cache --file bossdocker-installboss-cache/Dockerfile --tag bossdocker-installboss-cache:latest
+    - name: Run Cachemaker container
+      if: fromJSON(steps.file-exists-tester.outputs.needToMake)
+      uses: addnab/docker-run-action@v1
+      with:
+        image: bossdocker-installboss-cache:latest
+        options: --security-opt label=disable --privileged -v ${{ github.workdir }}/out:/out
+        run: /root/cachemaker.sh ${{ matrix.bossversion }}
+    - name: Upload tar files
+      if: fromJSON(steps.file-exists-tester.outputs.needToMake)
+      uses: actions/upload-artifact@v3
+      with:
+        name: tarfiles-${{ matrix.bossversion }}
+        path: out/*.tar.gz
+
+  deploy-version:
+    needs: [process-version, list-versions]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Make Restore dir
+      run: mkdir -p out
+    - name: Restore tar files
+      uses: actions/download-artifact@v3
+      with:
+        name: tarfiles-${{ matrix.bossversion }}
+        path: out
+    - name: Check restore success
+      run: ls -l out
+    - name: Upload cmthome files
+      uses: nogsantos/scp-deploy@master
+      with:
+        src: out/cmthome-${{ matrix.bossversion }}.tar.gz
+        host: ${{ secrets.SSH_HOST }}
+        remote: ${{ secrets.SSH_DIR }}/cmthome/
+        port: ${{ secrets.SSH_PORT }}
+        user: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+    - name: Upload TestRelease files
+      uses: nogsantos/scp-deploy@master
+      with:
+        src: out/TestRelease-${{ matrix.bossversion }}.tar.gz
+        host: ${{ secrets.SSH_HOST }}
+        remote: ${{ secrets.SSH_DIR }}/testrelease/
+        port: ${{ secrets.SSH_PORT }}
+        user: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+    - name: Upload cvmfs-cache files
+      uses: nogsantos/scp-deploy@master
+      with:
+        src: out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
+        host: ${{ secrets.SSH_HOST }}
+        remote: ${{ secrets.SSH_DIR }}/cache/
+        port: ${{ secrets.SSH_PORT }}
+        user: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+    
+  cleanup:
+    needs: [list-versions, deploy-version]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
+    steps:
+      - name: Write small dummies to replace artifacts
+        run: |
+          mkdir -p out
+          touch out/cmthome-${{ matrix.bossversion }}.tar.gz
+          touch out/testrelease-${{ matrix.bossversion }}.tar.gz
+          touch out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
+      - name: Upload dummies
+        uses: actions/upload-artifact@v3
+        with:
+          name: tarfiles-${{ matrix.bossversion }}
+          path: out/*.tar.gz
+          retention-days: 1
