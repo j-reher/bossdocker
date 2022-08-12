@@ -36,7 +36,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Make Dummies
+    - name: Test if run is needed
       id: file-exists-tester
       run: |
         mkdir -p out
@@ -45,6 +45,7 @@ jobs:
         curl --head --silent --fail "https://ep1.rub.de/~jreher/bossdocker-download/testrelease/TestRelease-${{ matrix.bossversion }}.tar.gz" 2> /dev/null ;
         then
           echo "::set-output name=needToMake::${{ toJSON(false) }}"
+          touch out/no-run-necessary-${{ matrix.bossversion }}.info
         else
           echo "::set-output name=needToMake::${{ toJSON(true) }}"
         fi
@@ -63,11 +64,10 @@ jobs:
         options: --security-opt label=disable --privileged -v ${{ github.workspace }}/out:/out
         run: /root/cachemaker.sh ${{ matrix.bossversion }}
     - name: Upload tar files
-      if: fromJSON(steps.file-exists-tester.outputs.needToMake)
       uses: actions/upload-artifact@v3
       with:
         name: tarfiles-${{ matrix.bossversion }}
-        path: out/*.tar.gz
+        path: out/*
 
   deploy-version:
     needs: [process-version, list-versions]
@@ -86,9 +86,17 @@ jobs:
       with:
         name: tarfiles-${{ matrix.bossversion }}
         path: out
-    - name: Check restore success
-      run: ls -l out
+    - name: Test if push is needed
+      id: file-exists-tester
+      run: |
+        if [ -f "out/no-run-necessary-${{ matrix.bossversion }}.info" ];
+        then
+          echo "::set-output name=needToPush::${{ toJSON(false) }}"
+        else
+          echo "::set-output name=needToPush::${{ toJSON(true) }}"
+        fi
     - name: Upload cmthome files
+      if: fromJSON(steps.file-exists-tester.outputs.needToPush)
       uses: nogsantos/scp-deploy@master
       with:
         src: out/cmthome-${{ matrix.bossversion }}.tar.gz
@@ -98,6 +106,7 @@ jobs:
         user: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
     - name: Upload TestRelease files
+      if: fromJSON(steps.file-exists-tester.outputs.needToPush)
       uses: nogsantos/scp-deploy@master
       with:
         src: out/TestRelease-${{ matrix.bossversion }}.tar.gz
@@ -107,6 +116,7 @@ jobs:
         user: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
     - name: Upload cvmfs-cache files
+      if: fromJSON(steps.file-exists-tester.outputs.needToPush)
       uses: nogsantos/scp-deploy@master
       with:
         src: out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
