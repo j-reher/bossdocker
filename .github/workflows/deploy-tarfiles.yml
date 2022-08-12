@@ -38,10 +38,16 @@ jobs:
         echo "If this is the problem I'm mad." >> cmthome-${{ matrix.bossversion }}.tar.gz
         echo "If this is the problem I'm mad." >> cvmfs-cache-${{ matrix.bossversion }}.tar.gz
         echo "If this is the problem I'm mad." >> TestRelease-${{ matrix.bossversion }}.tar.gz
+        if curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/cmthome-${{ matrix.bossversion }}.tar.gz 2> /dev/null; then
+          echo "File Exists"
+        else
+          echo "File does not Exists"
+        fi
         pwd
         ls -l
+        exit: success()
     - name: Build the cachemaker image
-      if: curl --head --silent --fail https://ep1.rub.de:~jreher/bossdocker-download/cmthome-${{ matrix.bossversion }}.tar.gz 2> /dev/null
+      if: 
       run: |
         docker build bossdocker-base --file bossdocker-base/Dockerfile --tag bossdocker-base:latest
         docker build bossdocker-installboss --file bossdocker-installboss/Dockerfile --tag bossdocker-installboss:latest
