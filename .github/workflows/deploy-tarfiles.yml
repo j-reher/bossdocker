@@ -48,6 +48,12 @@ jobs:
         else
           echo "::set-output name=needToMake::${{ toJSON(true) }}"
         fi
+        echo "${{ github.workdir }}"
+        echo "${{ github.workspace }}"
+        echo "$GITHUB_WORKDIR"
+        echo "$GITHUB_WORKSPACE"
+        echo "::set-output name=needToMake::${{ toJSON(true) }}"
+
 
     - name: Build the cachemaker image
       if: fromJSON(steps.file-exists-tester.outputs.needToMake)
