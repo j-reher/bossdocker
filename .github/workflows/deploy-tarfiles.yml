@@ -68,7 +68,7 @@ jobs:
       with:
         src: out/cmthome-${{ matrix.bossversion }}.tar.gz
         host: ${{ secrets.SSH_HOST }}
-        remote: ~/cmthome-${{ matrix.bossversion }}.tar.gz
+        remote: ${{ secrets.SSH_DIR }}/cmthome/
         port: ${{ secrets.SSH_PORT }}
         user: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
