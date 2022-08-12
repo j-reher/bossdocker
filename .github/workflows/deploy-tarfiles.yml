@@ -45,7 +45,7 @@ jobs:
       id: hash-outputs
       run: |
         echo "Test: ${{ hashFiles('/home/runner/**') }}"
-        echo "::set-output name=matrix::${{ hashFiles('/home/runner/**') }}" 
+        echo "::set-output hash-#{{ matrix.bossversion }}=${{ hashFiles('/home/runner/**') }}" 
     - name: Cache tar files
       uses: actions/cache@v3
       with:
@@ -61,11 +61,13 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+    - name: Output retrieved hash
+      run: echo ${{ needs.process-version.output.hash-${{ matrix.bossversion }} }}
     - name: Restore Cached tar files
       uses: actions/cache@v3
       with:
         path: /home/runner/out
-        key: tarcache-${{ matrix.bossversion }}-${{ needs.process-version.outputs.hash }}
+        key: tarcache-${{ matrix.bossversion }}-${{ needs.process-version.outputs.hash-${{ matrix.bossversion }} }}
         restore-keys: tarcache-${{ matrix.bossversion }}
     - name: Check Cache Success
       run: ls -l /home/runner/out
