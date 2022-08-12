@@ -1,7 +1,6 @@
 #!/bin/bash
 
-version=${1:-7.0.5-Slc6Centos7Compat}
-#                 -Slc6Centos7Compat
+version=${1:-7.0.5}
 cmthome="/cvmfs/bes3.ihep.ac.cn/bes3sw/cmthome/cmthome-$version"
 ugid=${2:-"$(id -u):$(id -g)"}
 
@@ -27,7 +26,7 @@ cd /root/cmthome || exit 1
 cmt config
 
 printf "\nInstall TestRelease\n"
-cp -r /cvmfs/bes3.ihep.ac.cn/bes3sw/Boss/7.0.5/TestRelease /root/workarea/
+cp -r "/cvmfs/bes3.ihep.ac.cn/bes3sw/Boss/$version/TestRelease" /root/workarea/
 sed -i 's/#include \"\$BESEVENTMIXERROOT\/share\/jobOptions_EventMixer_rec.txt\"/\/\/#include \"\$BESEVENTMIXERROOT\/share\/jobOptions_EventMixer_rec.txt\"/g' /root/workarea/TestRelease/TestRelease-*/run/jobOptions_rec.txt
 
 printf "\nTar up cmthome\n"
