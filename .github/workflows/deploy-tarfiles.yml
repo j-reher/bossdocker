@@ -66,31 +66,34 @@ jobs:
         path: ~/out
         key: tarcache-${{ matrix.bossversion }}-${{ needs.process-version.outputs.hash }}
         restore-keys: tarcache-${{ matrix.bossversion }}
+    - name: Test
+      run: |
+        scp -r 
     - name: Upload cmthome files
-      uses: nogsantos/scp-deploy@master
+      uses: appleboy/scp-action@master
       with:
-        src: /home/runner/out/cmthome-${{ matrix.bossversion }}.tar.gz
         host: ${{ secrets.SSH_HOST }}
-        remote: ${{ secrets.SSH_DIR }}/cmthome/ }}
-        port: ${{ secrets.SSH_PORT }}
-        user: ${{ secrets.SSH_USER }}
+        username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        source: "/home/runner/out/cmthome-${{ matrix.bossversion }}.tar.gz"
+        target: ${{ secrets.SSH_DIR }}/cmthome/
     - name: Upload TestRelease files
-      uses: nogsantos/scp-deploy@master
+      uses: appleboy/scp-action@master
       with:
-        src: /home/runner/out/TestRelease-${{ matrix.bossversion }}.tar.gz
         host: ${{ secrets.SSH_HOST }}
-        remote: ${{ secrets.SSH_DIR }}/testrelease/ }}
-        port: ${{ secrets.SSH_PORT }}
-        user: ${{ secrets.SSH_USER }}
+        username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        source: "/home/runner/out/testrelease-${{ matrix.bossversion }}.tar.gz"
+        target: ${{ secrets.SSH_DIR }}/testrelease/
     - name: Upload cvmfs-cache files
-      uses: nogsantos/scp-deploy@master
+      uses: appleboy/scp-action@master
       with:
-        src: /home/runner/out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
         host: ${{ secrets.SSH_HOST }}
-        remote: ${{ secrets.SSH_DIR }}/cache/ }}
-        port: ${{ secrets.SSH_PORT }}
-        user: ${{ secrets.SSH_USER }}
+        username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        source: "/home/runner/out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz"
+        target: ${{ secrets.SSH_DIR }}/cache/
     
