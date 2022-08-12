@@ -9,6 +9,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Linelint
-      uses: fernandrone/linelint@0.0.4
-      id: linelint
+    - name: newline-action
+      uses: Logerfo/newline-action@0.0.3
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }} # The `GITHUB_TOKEN` secret.
