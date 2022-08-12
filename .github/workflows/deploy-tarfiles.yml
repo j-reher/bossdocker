@@ -44,7 +44,7 @@ jobs:
     - id: hash-outputs
       run: |
         echo "Test: ${{ hashFiles('/home/runner/**') }}"
-        echo "::set-output name=matrix::${{ hashFiles('/home/runner/**') }}"
+        echo "::set-output name=matrix::${{ hashFiles('/home/runner/**') }}" 
     - name: Cache tar files
       uses: actions/cache@v3
       with:
