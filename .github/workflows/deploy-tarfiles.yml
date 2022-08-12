@@ -41,7 +41,8 @@ jobs:
         echo "If this is the problem I'm mad." >> TestRelease-${{ matrix.bossversion }}.tar.gz
         pwd
         ls -l /home/runner/out
-    - id: hash-outputs
+    - name: Get hash of output files
+      id: hash-outputs
       run: |
         echo "Test: ${{ hashFiles('/home/runner/**') }}"
         echo "::set-output name=matrix::${{ hashFiles('/home/runner/**') }}" 
