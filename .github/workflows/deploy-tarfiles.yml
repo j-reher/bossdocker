@@ -52,7 +52,7 @@ jobs:
         echo "${{ github.workspace }}"
         echo "$GITHUB_WORKDIR"
         echo "$GITHUB_WORKSPACE"
-        echo "::set-output name=needToMake::${{ toJSON(true) }}"
+        echo "::set-output name=needToMake::${{ toJSON(false) }}"
 
 
     - name: Build the cachemaker image
