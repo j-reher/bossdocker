@@ -42,6 +42,8 @@ jobs:
         echo "If this is the problem I'm mad." >> cmthome-${{ matrix.bossversion }}.tar.gz
         echo "If this is the problem I'm mad." >> cvmfs-cache-${{ matrix.bossversion }}.tar.gz
         echo "If this is the problem I'm mad." >> TestRelease-${{ matrix.bossversion }}.tar.gz
+    - run: |
+        printf 'Test: %s' "${{ hashFiles('**.tar.gz') }}"
         printf 'Test: %s' "${{ hashFiles('**.tar.gz') }}"
 
   deploy-version:
