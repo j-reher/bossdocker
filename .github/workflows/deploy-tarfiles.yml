@@ -60,7 +60,7 @@ jobs:
       uses: addnab/docker-run-action@v1
       with:
         image: bossdocker-installboss-cache:latest
-        options: --security-opt label=disable --privileged -v ${{ github.workdir }}/out:/out
+        options: --security-opt label=disable --privileged -v ${{ github.workspace }}/out:/out
         run: /root/cachemaker.sh ${{ matrix.bossversion }}
     - name: Upload tar files
       if: fromJSON(steps.file-exists-tester.outputs.needToMake)
