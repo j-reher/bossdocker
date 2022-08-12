@@ -18,7 +18,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Convert version list to Matrix
-      id: set-matrix
+      id: set-matrix 
       run: echo "::set-output name=matrix::$(cat versions.txt | jq -R -s -c 'split("\n")[:-1]')"
 
   process-version:
