@@ -24,8 +24,6 @@ jobs:
   process-version:
     needs: list-versions
     runs-on: ubuntu-latest
-    outputs:
-      hash: ${{ steps.hash-outputs.outputs.hash }}
     strategy:
       matrix:
         bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
@@ -34,23 +32,18 @@ jobs:
       uses: actions/checkout@v3
     - name: Make Dummies
       run: |
-        mkdir -p /home/runner/out
-        cd /home/runner/out
+        mkdir -p out
+        cd out
         echo "If this is the problem I'm mad." >> cmthome-${{ matrix.bossversion }}.tar.gz
         echo "If this is the problem I'm mad." >> cvmfs-cache-${{ matrix.bossversion }}.tar.gz
         echo "If this is the problem I'm mad." >> TestRelease-${{ matrix.bossversion }}.tar.gz
         pwd
-        ls -l /home/runner/out
-    - name: Get hash of output files
-      id: hash-outputs
-      run: |
-        echo "Test: ${{ hashFiles('/home/runner/**') }}"
-        echo "::set-output hash-#{{ matrix.bossversion }}=${{ hashFiles('/home/runner/**') }}" 
+        ls -l
     - name: Upload tar files
       uses: actions/upload-artifact@v3
       with:
         name: tarfiles-${{ matrix.bossversion }}
-        path: /home/runner/out/*.tar.gz
+        path: out/*.tar.gz
 
   deploy-version:
     needs: [process-version, list-versions]
@@ -62,18 +55,18 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Make Restore dir
-      run: mkdir -p /home/runner/out
+      run: mkdir -p out
     - name: Restore tar files
       uses: actions/download-artifact@v3
       with:
         name: tarfiles-${{ matrix.bossversion }}
-        path: /home/runner/out
+        path: out
     - name: Check restore success
-      run: ls -l /home/runner/out
+      run: ls -l out
     - name: Upload cmthome files
       uses: nogsantos/scp-deploy@master
       with:
-        src: /home/runner/out/cmthome-${{ matrix.bossversion }}.tar.gz
+        src: out/cmthome-${{ matrix.bossversion }}.tar.gz
         host: ${{ secrets.SSH_HOST }}
         remote: ~/cmthome-${{ matrix.bossversion }}.tar.gz
         port: ${{ secrets.SSH_PORT }}
@@ -82,7 +75,7 @@ jobs:
     - name: Upload TestRelease files
       uses: nogsantos/scp-deploy@master
       with:
-        src: /home/runner/out/TestRelease-${{ matrix.bossversion }}.tar.gz
+        src: out/TestRelease-${{ matrix.bossversion }}.tar.gz
         host: ${{ secrets.SSH_HOST }}
         remote: ${{ secrets.SSH_DIR }}/testrelease/
         port: ${{ secrets.SSH_PORT }}
@@ -91,7 +84,7 @@ jobs:
     - name: Upload cvmfs-cache files
       uses: nogsantos/scp-deploy@master
       with:
-        src: /home/runner/out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
+        src: out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
         host: ${{ secrets.SSH_HOST }}
         remote: ${{ secrets.SSH_DIR }}/cache/
         port: ${{ secrets.SSH_PORT }}
@@ -107,13 +100,13 @@ jobs:
     steps:
       - name: Write small dummies to replace artifacts
         run: |
-          mkdir -p /home/runner/out
-          touch /home/runner/out/cmthome-${{ matrix.bossversion }}.tar.gz
-          touch /home/runner/out/testrelease-${{ matrix.bossversion }}.tar.gz
-          touch /home/runner/out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
+          mkdir -p out
+          touch out/cmthome-${{ matrix.bossversion }}.tar.gz
+          touch out/testrelease-${{ matrix.bossversion }}.tar.gz
+          touch out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
       - name: Upload dummies
         uses: actions/upload-artifact@v3
         with:
           name: tarfiles-${{ matrix.bossversion }}
-          path: /home/runner/out/*.tar.gz
+          path: out/*.tar.gz
           retention-days: 1
