@@ -41,7 +41,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/out
-        key: bosscache-tars-${{ matrix.bossversion }}
+        key: bosscache-tars-${{ matrix.bossversion }}-${{ hashFiles('~/out/*') }}
 
   deploy-version:
     needs: [process-version, list-versions]
