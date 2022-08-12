@@ -34,7 +34,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/out
-        key: bosscache-tars-${{ matrix.bossversion }}-${{ hashFiles('~/out/cmthome-${{ matrix.bossversion }}.tar.gz') }}
+        key: bosscache-tars-${{ matrix.bossversion }}
     - name: Make Dummies
       run: |
         mkdir -p ~/out
