@@ -42,7 +42,7 @@ jobs:
         do
           if [ $p != "7.0.5" ] ; then
             echo "Hit! $p"
-            "$p" >> versions_process.txt
+            echo "$p" >> versions_process.txt
           fi
         done <versions.txt
     - name: 
