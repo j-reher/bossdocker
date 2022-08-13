@@ -117,7 +117,7 @@ jobs:
         push: true
         tags: localhost:5000/jreher/boss:utils-cache
         build-args: |
-          REPOSITORY="localhost:5000/"
+          REPOSITORY=localhost:5000/
 
     - name: Test sim, reco and ana with boss.exe 
       uses: addnab/docker-run-action@v3
