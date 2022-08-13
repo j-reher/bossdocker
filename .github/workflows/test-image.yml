@@ -74,7 +74,7 @@ jobs:
         path: "scripts/*.sh"
   
   build-and-test:
-    needs: [lint-bossdocker-dockerfile, lint-base-dockerfile]
+    needs: [lint-bossdocker-dockerfile, lint-base-dockerfile, lint-install-dockerfile, lint-cache-dockerfile, lint-shellscripts]
     runs-on: ubuntu-latest
     services:
       registry:
