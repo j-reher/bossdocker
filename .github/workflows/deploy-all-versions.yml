@@ -39,10 +39,10 @@ jobs:
       run: |
         echo "The workflow was called manually, only deploying a few."
     - name: Version 1
-      if: DEPLOY-ALL == 'true'
+      if: $DEPLOY-ALL == 'true'
       run: |
         echo "Version 1 worked."
-    - name: Version 2
-      if: ${{ DEPLOY-ALL == 'true' }}
-      run: |
-        echo "Version 2 worked."
+    # - name: Version 2
+    #   if: ${{ $DEPLOY-ALL == 'true' }}
+    #   run: |
+    #     echo "Version 2 worked."
