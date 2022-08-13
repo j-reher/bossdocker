@@ -18,12 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Echo run by workflow_run
-      if: ${{ github.event_name }} == workflow_run
+      if: ${{ github.event_name }} == 'workflow_run'
       run: |
         echo "The workflow was called by another workflow running!"
         echo "Action: ${{ github.event.action }}"
     - name: Echo run by dispatch
-      if: ${{ github.event_name }} == workflow_dispatch
+      if: ${{ github.event_name }} == 'workflow_dispatch'
       run: |
         echo "The workflow was called manually!"
         echo "Input: ${{ github.event.inputs.deploy-all }}"
