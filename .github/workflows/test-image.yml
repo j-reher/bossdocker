@@ -100,18 +100,24 @@ jobs:
         context: bossdocker
         push: true
         tags: localhost:5000/jreher/boss:latest
+        build-args: |
+          REPOSITORY="localhost:5000/"
     - name: Build install and push to local registry
       uses: docker/build-push-action@v3
       with:
         context: bossdocker
         push: true
         tags: localhost:5000/jreher/boss:utils-install
+        build-args: |
+          REPOSITORY="localhost:5000/"
     - name: Build cache and push to local registry
       uses: docker/build-push-action@v3
       with:
         context: bossdocker
         push: true
         tags: localhost:5000/jreher/boss:utils-cache
+        build-args: |
+          REPOSITORY="localhost:5000/"
 
     - name: Test sim, reco and ana with boss.exe 
       uses: addnab/docker-run-action@v3
