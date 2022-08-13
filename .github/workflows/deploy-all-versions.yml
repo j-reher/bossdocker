@@ -40,7 +40,7 @@ jobs:
         echo "This will go through versions and list the missing ones in a new file 'versions_process.txt'"
         while IFS="" read -r p || [ -n "$p" ]
         do
-          if $p != '7.0.5'; then
+          if $p != "7.0.5"; then
             echo "Hit! $p"
             $p >> versions_process.txt
           fi
