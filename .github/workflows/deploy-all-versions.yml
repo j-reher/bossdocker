@@ -24,3 +24,7 @@ jobs:
     - name: Echo run by dispatch
       if: ${{ github.event }} == workflow_dispatch
       run: echo "The workflow was called manually!"
+    - name: Echo event type
+      run: |
+        echo "Event: ${{ github.event }}"
+        echo "Action: ${{ github.event.action }}"
