@@ -128,6 +128,7 @@ jobs:
           source /root/mount.sh
           source /root/setup.sh
           cd /root/workarea/TestRelease/*/run
+          sed -i 's/ApplicationMgr.EvtMax = 50;/ApplicationMgr.EvtMax = 1;/g' /root/workarea/TestRelease/*/run/jobOptions_sim.txt
           boss.exe jobOptions_sim.txt
           boss.exe jobOptions_rec.txt
           boss.exe jobOptions_ana_rhopi.txt
