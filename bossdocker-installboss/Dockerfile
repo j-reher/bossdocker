@@ -1,4 +1,4 @@
-FROM jrehr/boss:utils-base
+FROM jreher/boss:utils-base
 
 RUN mkdir /out
 COPY bossmaker.sh /root/bossmaker.sh
