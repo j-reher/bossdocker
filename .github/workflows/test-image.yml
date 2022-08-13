@@ -101,7 +101,7 @@ jobs:
         push: true
         tags: localhost:5000/jreher/boss:latest
         build-args: |
-          REPOSITORY="localhost:5000/"
+          REPOSITORY=localhost:5000/
     - name: Build install and push to local registry
       uses: docker/build-push-action@v3
       with:
@@ -109,7 +109,7 @@ jobs:
         push: true
         tags: localhost:5000/jreher/boss:utils-install
         build-args: |
-          REPOSITORY="localhost:5000/"
+          REPOSITORY=localhost:5000/
     - name: Build cache and push to local registry
       uses: docker/build-push-action@v3
       with:
