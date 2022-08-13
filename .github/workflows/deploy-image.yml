@@ -42,6 +42,9 @@ jobs:
         tags: boss:utils-base
         cache-from: type=local,src=/tmp/.buildx-cache-base
         cache-to: type=local,dest=/tmp/.buildx-cache-base-new
+    - name: Re-Tag Base
+      run: |
+        docker tag boss:utils-base bossdocker-base:latest
     - name: Move base cache
       run: |
         rm -rf /tmp/.buildx-cache-base
@@ -84,6 +87,9 @@ jobs:
         tags: boss:utils-install
         cache-from: type=local,src=/tmp/.buildx-cache-install
         cache-to: type=local,dest=/tmp/.buildx-cache-install-new
+    - name: Re-Tag Install
+      run: |
+        docker tag boss:utils-install bossdocker-installdocker:latest
     - name: Move install cache
       run: |
         rm -rf /tmp/.buildx-cache-install
