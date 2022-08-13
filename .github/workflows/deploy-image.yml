@@ -35,7 +35,7 @@ jobs:
       run: |
         docker tag jreher/boss:latest ${{ secrets.azurecr_url }}/boss:latest
         docker tag jreher/boss:utils-base ${{ secrets.azurecr_url }}/boss:utils-base
-        docker tag jreher/boss:utils-install ${{ secrets.azurecr_url }}//boss:utils-install
+        docker tag jreher/boss:utils-install ${{ secrets.azurecr_url }}/boss:utils-install
         docker tag jreher/boss:utils-cache ${{ secrets.azurecr_url }}/boss:utils-cache
         docker push ${{ secrets.azurecr_url }}/boss:latest
         docker push ${{ secrets.azurecr_url }}/boss:utils-base
