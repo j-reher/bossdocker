@@ -37,11 +37,11 @@ jobs:
     - name: Stage missing versions for upload
       if: ${{ env.DEPLOY_ALL == 'false' }}
       run: |
-        echo "This will go through versions and list the missing ones in a new file 'versions_process.txt'"
+        echo "This will go through versions and list the missing ones in a new file 'versions_processed.txt'"
         while IFS="" read -r p || [ -n "$p" ]
         do
           if [ $p != "7.0.5" ] ; then
-            echo "Hit! $p"
+            echo "Staging version $p for upload."
             echo "$p" >> versions_processed.txt
           fi
         done <versions.txt
@@ -57,3 +57,5 @@ jobs:
         cat versions_processed.txt
         echo "Reference raw:"
         cat versions.txt
+        echo "::set-output name=matrix::$(cat versions.txt | jq -R -s -c 'split("\n")[:-1]')"
+        echo "outputs.matrix"
