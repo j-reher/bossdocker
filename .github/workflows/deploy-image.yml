@@ -20,11 +20,6 @@ jobs:
     # This is a separate action that sets up buildx runner
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
-    - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.dockerhub_login }}
-        password: ${{ secrets.dockerhub_pass }}
 
     - name: Cache Docker layers - Base
       uses: actions/cache@v2
@@ -45,6 +40,7 @@ jobs:
     - name: Re-Tag Base
       run: |
         docker tag boss:utils-base bossdocker-base:latest
+        docker image ls
     - name: Move base cache
       run: |
         rm -rf /tmp/.buildx-cache-base
@@ -116,6 +112,11 @@ jobs:
         rm -rf /tmp/.buildx-cache-installcache
         mv /tmp/.buildx-cache-installcache-new /tmp/.buildx-cache-installcache
         
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.dockerhub_login }}
+        password: ${{ secrets.dockerhub_pass }}
     - name: Upload Docker Image
       run: |
         docker tag boss:latest jreher/boss:latest
