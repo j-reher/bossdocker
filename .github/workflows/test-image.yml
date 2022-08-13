@@ -78,17 +78,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Build the Docker base image
-      run: docker build bossdocker-base --file bossdocker-base/Dockerfile --tag bossdocker-base:latest
+      run: docker build bossdocker-base --file bossdocker-base/Dockerfile --tag jreher/boss:utils-base
     - name: Build the main Docker image
-      run: docker build bossdocker --file bossdocker/Dockerfile --tag bossdocker:latest
+      run: docker build bossdocker --file bossdocker/Dockerfile --tag jreher/boss:latest
     - name: Build the Docker installer image
-      run: docker build bossdocker-installboss --file bossdocker-installboss/Dockerfile --tag bossdocker-installboss:latest
+      run: docker build bossdocker-installboss --file bossdocker-installboss/Dockerfile --tag jreher/boss:utils-install
     - name: Build the Docker install-and-cache image
-      run: docker build bossdocker-installboss-cache --file bossdocker-installboss-cache/Dockerfile --tag bossdocker-installboss-cache:latest
+      run: docker build bossdocker-installboss-cache --file bossdocker-installboss-cache/Dockerfile --tag jreher/boss:utils-cache
     - name: Test sim, reco and ana with boss.exe 
       uses: addnab/docker-run-action@v3
       with:
-        image: bossdocker:latest
+        image: jreher/boss:latest
         options: --security-opt label=disable --workdir /root/workarea --privileged
         run: |
           source /root/mount.sh
@@ -100,7 +100,7 @@ jobs:
     - name: Test compiling with cmt
       uses: addnab/docker-run-action@v3
       with:
-        image: bossdocker:latest
+        image: jreher/boss:latest
         options: --security-opt label=disable --workdir /root/workarea --privileged
         run: |
           source /root/mount.sh

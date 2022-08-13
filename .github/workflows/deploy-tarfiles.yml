@@ -50,17 +50,11 @@ jobs:
           echo "::set-output name=needToMake::${{ toJSON(true) }}"
         fi
 
-    - name: Build the cachemaker image
-      if: fromJSON(steps.file-exists-tester.outputs.needToMake)
-      run: |
-        docker build bossdocker-base --file bossdocker-base/Dockerfile --tag bossdocker-base:latest
-        docker build bossdocker-installboss --file bossdocker-installboss/Dockerfile --tag bossdocker-installboss:latest
-        docker build bossdocker-installboss-cache --file bossdocker-installboss-cache/Dockerfile --tag bossdocker-installboss-cache:latest
     - name: Run Cachemaker container
       if: fromJSON(steps.file-exists-tester.outputs.needToMake)
       uses: addnab/docker-run-action@v1
       with:
-        image: bossdocker-installboss-cache:latest
+        image: jreher/boss:utils-cache
         options: --security-opt label=disable --privileged -v ${{ github.workspace }}/out:/out
         run: /root/cachemaker.sh ${{ matrix.bossversion }}
     - name: Upload tar files
