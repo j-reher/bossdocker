@@ -36,15 +36,15 @@ jobs:
         load: true
         tags: boss:utils-base
         cache-from: type=local,src=/tmp/.buildx-cache-base
-        cache-to: type=local,dest=/tmp/.buildx-cache-base-new
+        # cache-to: type=local,dest=/tmp/.buildx-cache-base-new
     - name: Re-Tag Base
       run: |
         docker tag boss:utils-base bossdocker-base:latest
         docker image ls
-    - name: Move base cache
-      run: |
-        rm -rf /tmp/.buildx-cache-base
-        mv /tmp/.buildx-cache-base-new /tmp/.buildx-cache-base
+    # - name: Move base cache
+    #   run: |
+    #     rm -rf /tmp/.buildx-cache-base
+    #     mv /tmp/.buildx-cache-base-new /tmp/.buildx-cache-base
 
     - name: Cache Docker layers - Main
       uses: actions/cache@v2
@@ -60,12 +60,12 @@ jobs:
         push: false
         load: true
         tags: boss:latest
-        cache-from: type=local,src=/tmp/.buildx-cache-main
-        cache-to: type=local,dest=/tmp/.buildx-cache-main-new
-    - name: Move main cache
-      run: |
-        rm -rf /tmp/.buildx-cache-main
-        mv /tmp/.buildx-cache-main-new /tmp/.buildx-cache-main
+        # cache-from: type=local,src=/tmp/.buildx-cache-main
+        # cache-to: type=local,dest=/tmp/.buildx-cache-main-new
+    # - name: Move main cache
+      # run: |
+        # rm -rf /tmp/.buildx-cache-main
+        # mv /tmp/.buildx-cache-main-new /tmp/.buildx-cache-main
 
     - name: Cache Docker layers - Install
       uses: actions/cache@v2
@@ -81,15 +81,15 @@ jobs:
         push: false
         load: true
         tags: boss:utils-install
-        cache-from: type=local,src=/tmp/.buildx-cache-install
-        cache-to: type=local,dest=/tmp/.buildx-cache-install-new
+        # cache-from: type=local,src=/tmp/.buildx-cache-install
+        # cache-to: type=local,dest=/tmp/.buildx-cache-install-new
     - name: Re-Tag Install
       run: |
         docker tag boss:utils-install bossdocker-installdocker:latest
-    - name: Move install cache
-      run: |
-        rm -rf /tmp/.buildx-cache-install
-        mv /tmp/.buildx-cache-install-new /tmp/.buildx-cache-install
+    # - name: Move install cache
+    #   run: |
+    #     rm -rf /tmp/.buildx-cache-install
+    #     mv /tmp/.buildx-cache-install-new /tmp/.buildx-cache-install
 
     - name: Cache Docker layers - Installcache
       uses: actions/cache@v2
@@ -105,7 +105,7 @@ jobs:
         push: false
         load: true
         tags: boss:utils-cache
-        cache-from: type=local,src=/tmp/.buildx-cache-installcache
+        # cache-from: type=local,src=/tmp/.buildx-cache-installcache
         cache-to: type=local,dest=/tmp/.buildx-cache-installcache-new
     - name: Move cache installcache
       run: |
