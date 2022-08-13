@@ -1,4 +1,6 @@
-FROM jreher/boss:utils-base
+ARG REPOSITORY=""
+
+FROM ${REPOSITORY}jreher/boss:utils-base
 
 ARG BOSS_VERSION="7.0.5"
 
