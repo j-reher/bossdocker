@@ -1,0 +1,16 @@
+name: Deploy all versions
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy-all:
+        type: boolean
+        required: false
+        default: false
+        description: Remake all images instead of only the missing ones.
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "Hello World!"
