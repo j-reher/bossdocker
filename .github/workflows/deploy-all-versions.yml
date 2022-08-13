@@ -34,7 +34,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: List versions to upload
+    - name: Stage missing versions for upload
       if: ${{ env.DEPLOY_ALL == 'false' }}
       run: |
         echo "This will go through versions and list the missing ones in a new file 'versions_process.txt'"
@@ -45,7 +45,7 @@ jobs:
             echo "$p" >> versions_processed.txt
           fi
         done <versions.txt
-    - name: 
+    - name: Stage all versions for upload
       if: ${{ env.DEPLOY_ALL == 'true' }}
       run: |
         cp versions.txt versions_processed.txt
