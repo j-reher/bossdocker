@@ -1,4 +1,4 @@
-FROM bossdocker-installboss:latest
+FROM jreher/boss:utils-install
 
 COPY cachemaker.sh /root/cachemaker.sh
 RUN chmod a+x /root/cachemaker.sh

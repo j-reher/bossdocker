@@ -18,13 +18,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Build the Docker base image
-      run: docker build bossdocker-base --file bossdocker-base/Dockerfile --tag bossdocker-base:latest
+      run: docker build bossdocker-base --file bossdocker-base/Dockerfile --tag jreher/boss:utils-base
     - name: Build the main Docker image
-      run: docker build bossdocker --file bossdocker/Dockerfile --tag bossdocker:latest
+      run: docker build bossdocker --file bossdocker/Dockerfile --tag jreher/boss:latest
     - name: Build the Docker installer image
-      run: docker build bossdocker-installboss --file bossdocker-installboss/Dockerfile --tag bossdocker-installboss:latest
+      run: docker build bossdocker-installboss --file bossdocker-installboss/Dockerfile --tag jreher/boss:utils-install
     - name: Build the Docker install-and-cache image
-      run: docker build bossdocker-installboss-cache --file bossdocker-installboss-cache/Dockerfile --tag bossdocker-installboss-cache:latest
+      run: docker build bossdocker-installboss-cache --file bossdocker-installboss-cache/Dockerfile --tag jreher/boss:utils-cache
     - name: Login to Azure Container Registry
       uses: azure/docker-login@v1
       with:
@@ -48,11 +48,7 @@ jobs:
         password: ${{ secrets.dockerhub_pass }}
     - name: Upload Docker Image
       run: |
-        docker tag bossdocker:latest jreher/boss:latest
         docker push jreher/boss:latest
-        docker tag bossdocker-base:latest jreher/boss:utils-base
         docker push jreher/boss:utils-base
-        docker tag bossdocker-installboss:latest jreher/boss:utils-install
         docker push jreher/boss:utils-install
-        docker tag bossdocker-installboss-cache:latest jreher/boss:utils-cache
         docker push jreher/boss:utils-cache
