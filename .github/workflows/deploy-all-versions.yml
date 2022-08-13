@@ -1,0 +1,26 @@
+on:
+  workflow_run:
+    workflows: [Deploy .tar.gz files, Deploy Image -- Latest]
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      deploy-all:
+        type: boolean
+        required: false
+        default: false
+        description: Remake all images instead of only the missing ones.
+
+jobs:
+  echo-caller:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Echo run by workflow_run
+      if: ${{ github.event }} == workflow_run
+      run: echo "The workflow was called by another workflow running!"
+    - name: Echo run by push
+      if: ${{ github.event }} == push
+      run: echo "The workflow was called by a push!"
+    - name: Echo run by dispatch
+      if: ${{ github.event }} == workflow_dispatch
+      run: echo "The workflow was called manually!"
