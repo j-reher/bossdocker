@@ -72,23 +72,49 @@ jobs:
         path: "scripts/*.sh"
   
   build-and-test:
-    needs: [lint-bossdocker-dockerfile, lint-base-dockerfile, lint-cache-dockerfile, lint-cache-dockerfile, lint-shellscripts]
+    needs: [lint-bossdocker-dockerfile, lint-base-dockerfile, lint-cache-dockerfile, lint-cache-dockerfile]
     runs-on: ubuntu-latest
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Build the Docker base image
-      run: docker build bossdocker-base --file bossdocker-base/Dockerfile --tag jreher/boss:utils-base
-    - name: Build the main Docker image
-      run: docker build bossdocker --file bossdocker/Dockerfile --tag jreher/boss:latest
-    - name: Build the Docker installer image
-      run: docker build bossdocker-installboss --file bossdocker-installboss/Dockerfile --tag jreher/boss:utils-install
-    - name: Build the Docker install-and-cache image
-      run: docker build bossdocker-installboss-cache --file bossdocker-installboss-cache/Dockerfile --tag jreher/boss:utils-cache
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+      with:
+        driver-opts: network=host
+    - name: Build base and push to local registry
+      uses: docker/build-push-action@v3
+      with:
+        context: bossdocker-base
+        push: true
+        tags: localhost:5000/jreher/boss:utils-base
+    - name: Build main and push to local registry
+      uses: docker/build-push-action@v3
+      with:
+        context: bossdocker
+        push: true
+        tags: localhost:5000/jreher/boss:latest
+    - name: Build install and push to local registry
+      uses: docker/build-push-action@v3
+      with:
+        context: bossdocker
+        push: true
+        tags: localhost:5000/jreher/boss:utils-install
+    - name: Build cache and push to local registry
+      uses: docker/build-push-action@v3
+      with:
+        context: bossdocker
+        push: true
+        tags: localhost:5000/jreher/boss:utils-cache
+
     - name: Test sim, reco and ana with boss.exe 
       uses: addnab/docker-run-action@v3
       with:
-        image: jreher/boss:latest
+        image: localhost:5000/jreher/boss:latest
         options: --security-opt label=disable --workdir /root/workarea --privileged
         run: |
           source /root/mount.sh
@@ -100,7 +126,7 @@ jobs:
     - name: Test compiling with cmt
       uses: addnab/docker-run-action@v3
       with:
-        image: jreher/boss:latest
+        image: localhost:5000/jreher/boss:latest
         options: --security-opt label=disable --workdir /root/workarea --privileged
         run: |
           source /root/mount.sh
