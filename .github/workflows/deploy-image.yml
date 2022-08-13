@@ -36,9 +36,9 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        push: true
+        push: false
         load: true
-        tags: jreher/boss:utils-base
+        tags: boss:utils-base
         cache-from: type=local,src=/tmp/.buildx-cache-base
         cache-to: type=local,dest=/tmp/.buildx-cache-base-new
     - name: Move base cache
@@ -57,9 +57,9 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        push: true
+        push: false
         load: true
-        tags: jreher/boss:latest
+        tags: boss:latest
         cache-from: type=local,src=/tmp/.buildx-cache-main
         cache-to: type=local,dest=/tmp/.buildx-cache-main-new
     - name: Move main cache
@@ -78,9 +78,9 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        push: true
+        push: false
         load: true
-        tags: jreher/boss:utils-install
+        tags: boss:utils-install
         cache-from: type=local,src=/tmp/.buildx-cache-install
         cache-to: type=local,dest=/tmp/.buildx-cache-install-new
     - name: Move install cache
@@ -99,9 +99,9 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        push: true
+        push: false
         load: true
-        tags: jreher/boss:utils-cache
+        tags: boss:utils-cache
         cache-from: type=local,src=/tmp/.buildx-cache-installcache
         cache-to: type=local,dest=/tmp/.buildx-cache-installcache-new
     - name: Move cache installcache
