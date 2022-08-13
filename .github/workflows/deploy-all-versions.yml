@@ -33,7 +33,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
     - name: Checkout repository
-      uses: actions/checkout@3
+      uses: actions/checkout@v3
     - name: List versions to upload
       if: ${{ env.DEPLOY_ALL == 'false' }}
       run: |
