@@ -29,6 +29,8 @@ jobs:
       with:
         context: bossdocker-base
         push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
         tags: |
           jreher/boss:utils-base
     - name: Build and push main
@@ -36,6 +38,8 @@ jobs:
       with:
         context: bossdocker
         push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
         tags: |
           jreher/boss:latest
     - name: Build and push install
@@ -43,6 +47,8 @@ jobs:
       with:
         context: bossdocker-installboss
         push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
         tags: |
           jreher/boss:utils-install
     - name: Build and push installcache
@@ -50,5 +56,7 @@ jobs:
       with:
         context: bossdocker-installboss-cache
         push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
         tags: |
           jreher/boss:utils-cache
