@@ -28,5 +28,5 @@ jobs:
       run: echo "The workflow was called manually!"
     - name: Echo event type
       run: |
-        echo "Event: ${{ github.event.name }}"
+        echo "Event: ${{ github.event_name }}"
         echo "Action: ${{ github.event.action }}"
