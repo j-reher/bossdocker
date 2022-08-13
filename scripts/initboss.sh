@@ -1,6 +1,6 @@
 #!/bin/bash
 
-container_version="version=${1:-latest}"
+container_version=${1:-latest}
 
 fullpath=$(pwd)
 mount=${fullpath%Yapp*}
