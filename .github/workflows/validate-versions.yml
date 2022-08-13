@@ -15,9 +15,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Build the bossdocker-base image
-      run: |
-        docker build bossdocker-base --file bossdocker-base/Dockerfile --tag bossdocker-base:latest
     - name: Validate Versions
       run: |
         docker run --rm --init --privileged jreher/boss:utils-base bash -c "mount -a >>/dev/null && ls -1 /cvmfs/bes3.ihep.ac.cn/bes3sw/Boss" >> valid_versions.txt
