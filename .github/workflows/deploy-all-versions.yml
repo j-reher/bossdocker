@@ -15,8 +15,11 @@ on:
         default: false
         description: Remake all images instead of only the missing ones.
 
+env:
+  DEPLOY-ALL: ${{ ( github.event_name == 'workflow_run' && github.event.workflow == 'Deploy Image -- Latest' ) || ( github.event_name == 'workflow_dispatch' && github.event.inputs.deploy-all == 'true' ) }}
+
 jobs:
-  echo-caller:
+    echo-caller:
     runs-on: ubuntu-latest
     steps:
     - name: Echo run by workflow_run
@@ -35,6 +38,11 @@ jobs:
       if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.deploy-all == 'false'}}
       run: |
         echo "The workflow was called manually, only deploying a few."
-    - name: Echo debug stuff
+    - name: Version 1
+      if: DEPLOY-ALL == 'true'
       run: |
-        echo "Action: ${{ github.event.action }}"
+        echo "Version 1 worked."
+    - name: Version 2
+      if: ${{ DEPLOY-ALL == 'true' }}
+      run: |
+        echo "Version 2 worked."
