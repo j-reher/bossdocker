@@ -25,12 +25,6 @@ jobs:
       with:
         username: ${{ secrets.dockerhub_login }}
         password: ${{ secrets.dockerhub_pass }}
-    - name: Login to Azure Container Registry
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.azurecr_url }}
-        username: ${{ secrets.azurecr_login }}
-        password: ${{ secrets.azurecr_pass }}
 
     - name: Build and push base
       uses: docker/build-push-action@v2
@@ -39,7 +33,6 @@ jobs:
         push: true
         tags: |
           jreher/boss:utils-base
-          ${{ secrets.azurecr_url }}/boss:utils-base
     - name: Build and push main
       uses: docker/build-push-action@v2
       with:
@@ -47,7 +40,6 @@ jobs:
         push: true
         tags: |
           jreher/boss:latest
-          ${{ secrets.azurecr_url }}/boss:latest
     - name: Build and push install
       uses: docker/build-push-action@v2
       with:
@@ -55,7 +47,6 @@ jobs:
         push: true
         tags: |
           jreher/boss:utils-install
-          ${{ secrets.azurecr_url }}/boss:utils-install
     - name: Build and push installcache
       uses: docker/build-push-action@v2
       with:
@@ -63,4 +54,3 @@ jobs:
         push: true
         tags: |
           jreher/boss:utils-cache
-          ${{ secrets.azurecr_url }}/boss:utils-cache
