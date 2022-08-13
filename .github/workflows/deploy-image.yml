@@ -16,36 +16,113 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Build the Docker base image
-      run: docker build bossdocker-base --file bossdocker-base/Dockerfile --tag bossdocker-base:latest
-    - name: Build the main Docker image
-      run: docker build bossdocker --file bossdocker/Dockerfile --tag bossdocker:latest
-    - name: Build the Docker installer image
-      run: docker build bossdocker-installboss --file bossdocker-installboss/Dockerfile --tag bossdocker-installboss:latest
-    - name: Build the Docker install-and-cache image
-      run: docker build bossdocker-installboss-cache --file bossdocker-installboss-cache/Dockerfile --tag bossdocker-installboss-cache:latest
-    - name: Login to Azure Container Registry
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.azurecr_url }}
-        username: ${{ secrets.azurecr_login }}
-        password: ${{ secrets.azurecr_pass }}
-    - name: Upload Docker Image
-      run: |
-        docker tag bossdocker:latest ${{ secrets.azurecr_url }}/boss:latest
-        docker push ${{ secrets.azurecr_url }}/boss:latest
-        docker tag bossdocker-base:latest ${{ secrets.azurecr_url }}/bossdocker-base:latest
-        docker push ${{ secrets.azurecr_url }}/bossdocker-base:latest
-        docker tag bossdocker-installboss:latest ${{ secrets.azurecr_url }}/bossdocker-installboss:latest
-        docker push ${{ secrets.azurecr_url }}/bossdocker-installboss:latest
-        docker tag bossdocker-installboss-cache:latest ${{ secrets.azurecr_url }}/bossdocker-installboss-cache:latest
-        docker push ${{ secrets.azurecr_url }}/bossdocker-installboss-cache:latest
+    # This is a separate action that sets up buildx runner
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
     - name: Login to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.dockerhub_login }}
         password: ${{ secrets.dockerhub_pass }}
-    - name: Upload Docker Image
+
+    - name: Cache Docker layers - Base
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache-base
+        key: ${{ runner.os }}-buildx-base-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-base-
+    - name: Build and push base
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        load: true
+        tags: jreher/boss:utils-base
+        cache-from: type=local,src=/tmp/.buildx-cache-base
+        cache-to: type=local,dest=/tmp/.buildx-cache-base-new
+    - name: Move base cache
       run: |
-        docker tag bossdocker:latest jreher/boss:latest
-        docker push jreher/boss:latest
+        rm -rf /tmp/.buildx-cache-base
+        mv /tmp/.buildx-cache-base-new /tmp/.buildx-cache-base
+
+    - name: Cache Docker layers - Main
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache-main
+        key: ${{ runner.os }}-buildx-main-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-main
+    - name: Build and push main
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        load: true
+        tags: jreher/boss:latest
+        cache-from: type=local,src=/tmp/.buildx-cache-main
+        cache-to: type=local,dest=/tmp/.buildx-cache-main-new
+    - name: Move main cache
+      run: |
+        rm -rf /tmp/.buildx-cache-main
+        mv /tmp/.buildx-cache-main-new /tmp/.buildx-cache-main
+
+    - name: Cache Docker layers - Install
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache-install
+        key: ${{ runner.os }}-buildx-install-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-install-
+    - name: Build and push install
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        load: true
+        tags: jreher/boss:utils-install
+        cache-from: type=local,src=/tmp/.buildx-cache-install
+        cache-to: type=local,dest=/tmp/.buildx-cache-install-new
+    - name: Move install cache
+      run: |
+        rm -rf /tmp/.buildx-cache-install
+        mv /tmp/.buildx-cache-install-new /tmp/.buildx-cache-install
+
+    - name: Cache Docker layers - Installcache
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache-installcache
+        key: ${{ runner.os }}-buildx-installcache-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-installcache
+    - name: Build and push installcache
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        load: true
+        tags: jreher/boss:utils-cache
+        cache-from: type=local,src=/tmp/.buildx-cache-installcache
+        cache-to: type=local,dest=/tmp/.buildx-cache-installcache-new
+    - name: Move cache installcache
+      run: |
+        rm -rf /tmp/.buildx-cache-installcache
+        mv /tmp/.buildx-cache-installcache-new /tmp/.buildx-cache-installcache
+
+    # - name: Login to Azure Container Registry
+    #   uses: azure/docker-login@v1
+    #   with:
+    #     login-server: ${{ secrets.azurecr_url }}
+    #     username: ${{ secrets.azurecr_login }}
+    #     password: ${{ secrets.azurecr_pass }}
+    # - name: Upload Docker Image
+    #   run: |
+    #     docker tag bossdocker:latest ${{ secrets.azurecr_url }}/boss:latest
+    #     docker push ${{ secrets.azurecr_url }}/boss:latest
+    #     docker tag bossdocker-base:latest ${{ secrets.azurecr_url }}/bossdocker-base:latest
+    #     docker push ${{ secrets.azurecr_url }}/bossdocker-base:latest
+    #     docker tag bossdocker-installboss:latest ${{ secrets.azurecr_url }}/bossdocker-installboss:latest
+    #     docker push ${{ secrets.azurecr_url }}/bossdocker-installboss:latest
+    #     docker tag bossdocker-installboss-cache:latest ${{ secrets.azurecr_url }}/bossdocker-installboss-cache:latest
+    #     docker push ${{ secrets.azurecr_url }}/bossdocker-installboss-cache:latest
+
