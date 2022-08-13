@@ -2,7 +2,9 @@ name: Deploy all versions
 
 on:
   workflow_run:
-    workflows: [Deploy .tar.gz files, Deploy Image -- Latest]
+    workflows: |
+      Deploy .tar.gz files
+      Deploy Image -- Latest
     types:
       - completed
   workflow_dispatch:
@@ -18,15 +20,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Echo run by workflow_run
-      if: ${{ github.event_name == 'workflow_run' }}
+      if: ${{ github.event_name == 'workflow_run' && github.event.workflow == 'Deploy .tar.gz files'}}
       run: |
-        echo "The workflow was called by another workflow running!"
-        echo "Action: ${{ github.event.action }}"
+        echo "The workflow was called by \"Deploy .tar.gz files\" workflow running."
+    - name: Echo run by workflow_run
+      if: ${{ github.event_name == 'workflow_run' && github.event.workflow == 'Deploy Image -- Latest'}}
+      run: |
+        echo "The workflow was called by \"Deploy Image -- Latest\" workflow running."
     - name: Echo run by dispatch
-      if: ${{ github.event_name == 'workflow_dispatch' }}
+      if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.deploy-all == 'true'}}
       run: |
-        echo "The workflow was called manually!"
-        echo "Input: ${{ github.event.inputs.deploy-all }}"
+        echo "The workflow was called manually, requesting to deploy all."
+    - name: Echo run by dispatch
+      if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.deploy-all == 'false'}}
+      run: |
+        echo "The workflow was called manually, only deploying a few."
     - name: Echo debug stuff
       run: |
         echo "Action: ${{ github.event.action }}"
