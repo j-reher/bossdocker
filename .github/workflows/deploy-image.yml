@@ -33,14 +33,14 @@ jobs:
         password: ${{ secrets.azurecr_pass }}
     - name: Upload Docker Image
       run: |
-        docker tag bossdocker:latest ${{ secrets.azurecr_url }}/boss:latest
+        docker tag jreher/boss:latest ${{ secrets.azurecr_url }}/boss:latest
+        docker tag jreher/boss:utils-base ${{ secrets.azurecr_url }}/boss:utils-base
+        docker tag jreher/boss:utils-install ${{ secrets.azurecr_url }}//boss:utils-install
+        docker tag jreher/boss:utils-cache ${{ secrets.azurecr_url }}/boss:utils-cache
         docker push ${{ secrets.azurecr_url }}/boss:latest
-        docker tag bossdocker-base:latest ${{ secrets.azurecr_url }}/bossdocker-base:latest
-        docker push ${{ secrets.azurecr_url }}/bossdocker-base:latest
-        docker tag bossdocker-installboss:latest ${{ secrets.azurecr_url }}/bossdocker-installboss:latest
-        docker push ${{ secrets.azurecr_url }}/bossdocker-installboss:latest
-        docker tag bossdocker-installboss-cache:latest ${{ secrets.azurecr_url }}/bossdocker-installboss-cache:latest
-        docker push ${{ secrets.azurecr_url }}/bossdocker-installboss-cache:latest
+        docker push ${{ secrets.azurecr_url }}/boss:utils-base
+        docker push ${{ secrets.azurecr_url }}/boss:utils-install
+        docker push ${{ secrets.azurecr_url }}/boss:utils-cache
     - name: Login to Docker Hub
       uses: docker/login-action@v2
       with:
