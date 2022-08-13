@@ -119,13 +119,13 @@ jobs:
         password: ${{ secrets.dockerhub_pass }}
     - name: Upload Docker Image
       run: |
-        docker tag boss:latest jreher/boss:latest
+        docker tag bossdocker:latest jreher/boss:latest
         docker push jreher/boss:latest
-        docker tag boss:utils-base jreher/boss:utils-base
+        docker tag bossdocker-base:latest jreher/boss:utils-base
         docker push jreher/boss:utils-base
-        docker tag boss:utils-install jreher/boss:utils-install
+        docker tag bossdocker-installboss:latest jreher/boss:utils-install
         docker push jreher/boss:utils-install
-        docker tag boss:utils-cache jreher/boss:utils-cache
+        docker tag bossdocker-installboss-cache:latest jreher/boss:utils-cache
         docker push jreher/boss:utils-cache
 
 
