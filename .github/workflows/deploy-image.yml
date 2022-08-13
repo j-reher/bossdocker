@@ -108,6 +108,18 @@ jobs:
       run: |
         rm -rf /tmp/.buildx-cache-installcache
         mv /tmp/.buildx-cache-installcache-new /tmp/.buildx-cache-installcache
+        
+    - name: Upload Docker Image
+      run: |
+        docker tag boss:latest jreher/boss:latest
+        docker push jreher/boss:latest
+        docker tag boss:utils-base jreher/boss:utils-base
+        docker push jreher/boss:utils-base
+        docker tag boss:utils-install jreher/boss:utils-install
+        docker push jreher/boss:utils-install
+        docker tag boss:utils-cache jreher/boss:utils-cache
+        docker push jreher/boss:utils-cache
+
 
     # - name: Login to Azure Container Registry
     #   uses: azure/docker-login@v1
