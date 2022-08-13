@@ -58,4 +58,4 @@ jobs:
         echo "Reference raw:"
         cat versions.txt
         echo "::set-output name=matrix::$(cat versions.txt | jq -R -s -c 'split("\n")[:-1]')"
-        echo "${{ job.outputs.matrix }}"
+        echo "${{ steps.set-matrix.outputs.matrix }}"
