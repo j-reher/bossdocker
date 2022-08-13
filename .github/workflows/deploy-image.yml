@@ -36,7 +36,7 @@ jobs:
     - name: Build and push base
       uses: docker/build-push-action@v2
       with:
-        context: .
+        context: bossdocker-base
         push: false
         load: true
         tags: boss:utils-base
@@ -57,7 +57,7 @@ jobs:
     - name: Build and push main
       uses: docker/build-push-action@v2
       with:
-        context: .
+        context: bossdocker
         push: false
         load: true
         tags: boss:latest
@@ -78,7 +78,7 @@ jobs:
     - name: Build and push install
       uses: docker/build-push-action@v2
       with:
-        context: .
+        context: bossdocker-installboss
         push: false
         load: true
         tags: boss:utils-install
@@ -99,7 +99,7 @@ jobs:
     - name: Build and push installcache
       uses: docker/build-push-action@v2
       with:
-        context: .
+        context: bossdocker-installboss-cache
         push: false
         load: true
         tags: boss:utils-cache
