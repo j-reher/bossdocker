@@ -19,7 +19,7 @@ env:
   DEPLOY-ALL: ${{ ( github.event_name == 'workflow_run' && github.event.workflow == 'Deploy Image -- Latest' ) || ( github.event_name == 'workflow_dispatch' && github.event.inputs.deploy-all == 'true' ) }}
 
 jobs:
-    echo-caller:
+  echo-caller:
     runs-on: ubuntu-latest
     steps:
     - name: Echo run by workflow_run
