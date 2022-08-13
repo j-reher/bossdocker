@@ -49,7 +49,6 @@ jobs:
         else
           echo "::set-output name=needToMake::${{ toJSON(true) }}"
         fi
-
     - name: Run Cachemaker container
       if: fromJSON(steps.file-exists-tester.outputs.needToMake)
       uses: addnab/docker-run-action@v1
