@@ -52,13 +52,7 @@ jobs:
     - name: Turn new list into output for matrix
       id: set-matrix
       run: |
-        echo "This will take 'versions_processed.txt', created by one of the steps above, and turn it into an output that I can use to initiate a matrix job in the next step"
-        echo "Reference processed:"
-        cat versions_processed.txt
-        echo "Reference raw:"
-        cat versions.txt
-        echo "::set-output name=matrix::$(cat versions.txt | jq -R -s -c 'split("\n")[:-1]')"
-        echo "$(cat versions.txt | jq -R -s -c 'split("\n")[:-1]')"
+        echo "::set-output name=matrix::$(cat versions_processed.txt | jq -R -s -c 'split("\n")[:-1]')"
     - name: Check matrix output
       run: |
         echo "${{ steps.set-matrix.outputs.matrix }}"
