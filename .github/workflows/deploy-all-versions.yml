@@ -42,13 +42,13 @@ jobs:
         do
           if [ $p != "7.0.5" ] ; then
             echo "Hit! $p"
-            echo "$p" >> versions_process.txt
+            echo "$p" >> versions_processed.txt
           fi
         done <versions.txt
     - name: 
       if: ${{ env.DEPLOY_ALL == 'true' }}
       run: |
-        cp versions.txt versions_process.txt
+        cp versions.txt versions_processed.txt
     - name: Turn new list into output for matrix
       id: set-matrix
       run: |
