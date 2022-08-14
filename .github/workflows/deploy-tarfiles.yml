@@ -14,7 +14,7 @@ on:
         default: false
         description: 'Force creating all tar archives and replace those that exists. Caution, this will take a while!'  
 
-env.override:
+env:
   force-all: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.force-running-all == 'true' }}
 
 jobs:
