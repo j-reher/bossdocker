@@ -50,6 +50,7 @@ jobs:
   process-version:
     needs: list-versions
     runs-on: ubuntu-latest
+    if: ${{ needs.changes.outputs.services != '[]' && needs.changes.outputs.services != '' }}
     strategy:
       fail-fast: false
       matrix:
@@ -70,6 +71,7 @@ jobs:
   deploy-version:
     needs: [process-version, list-versions]
     runs-on: ubuntu-latest
+    if: ${{ needs.changes.outputs.services != '[]' && needs.changes.outputs.services != '' }}
     strategy:
       fail-fast: false
       matrix:
@@ -115,6 +117,7 @@ jobs:
   cleanup:
     needs: [list-versions, deploy-version]
     runs-on: ubuntu-latest
+    if: ${{ needs.changes.outputs.services != '[]' && needs.changes.outputs.services != '' }}
     strategy:
       matrix:
         bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
