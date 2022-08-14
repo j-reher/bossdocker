@@ -64,6 +64,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: list-versions
     if: ${{ needs.list-versions.outputs.nver > 0 }}
+    permissions:
+      packages: write
+      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -78,6 +81,12 @@ jobs:
       with:
         username: ${{ secrets.dockerhub_login }}
         password: ${{ secrets.dockerhub_pass }}
+    - name: Login to Docker CR
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build and push image
       uses: docker/build-push-action@v2
       with:
@@ -90,3 +99,4 @@ jobs:
           BOSS_VERSION=${{ matrix.bossversion }}
         tags: |
           jreher/boss:${{ matrix.bossversion }}
+          ghcr.io/${{ github.repository_owner }}/boss:${{ matrix.bossversion }}
