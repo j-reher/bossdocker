@@ -41,7 +41,7 @@ jobs:
         touch versions_processed.txt
         while IFS="" read -r p || [ -n "$p" ]
         do
-          if ! curl --silent -o /dev/null -f -lSL https://index.docker.io/v1/repositories/jreher/boss/tags/$p ; then
+          if ! curl --silent -f -lSL https://index.docker.io/v1/repositories/jreher/boss/tags/$p >> /dev/null ; then
             echo "Staging version $p for upload."
             echo "$p" >> versions_processed.txt
           fi
