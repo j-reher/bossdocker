@@ -14,9 +14,15 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Push readme to dockerhub
+    - name: Push readme to dockerhub main
       uses: peter-evans/dockerhub-description@v3
       with:
         username: ${{ secrets.dockerhub_login }}
         password: ${{ secrets.dockerhub_pass }}
         repository: jreher/boss
+    - name: Push readme to dockerhub utils
+      uses: peter-evans/dockerhub-description@v3
+      with:
+        username: ${{ secrets.dockerhub_login }}
+        password: ${{ secrets.dockerhub_pass }}
+        repository: jreher/boss-utils
