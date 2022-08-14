@@ -3,8 +3,8 @@ name: Deploy all versions
 on:
   workflow_run:
     workflows: |
-      Deploy .tar.gz files
-      Deploy Image -- Latest
+      'Deploy .tar.gz files'
+      'Deploy Image -- Latest'
     types:
       - completed
   workflow_dispatch:
