@@ -15,7 +15,7 @@ on:
         description: 'Force creating all tar archives and replace those that exists. Caution, this will take a while!'  
 
 env:
-  force-all: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.force-running-all == 'true' }}
+  DEPLOY_ALL: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.force-running-all == 'true' }}
 
 jobs:
   list-versions:
@@ -25,9 +25,27 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+    - name: Stage tar files for missing versions for upload
+      if: ${{ env.DEPLOY_ALL == 'false' }}
+      run: |
+        echo "This will go through versions and list the missing ones in a new file 'versions_processed.txt'"
+        touch versions_processed.txt
+        while IFS="" read -r p || [ -n "$p" ]
+        do
+          if ! curl --head --silent --fail "https://ep1.rub.de/~jreher/bossdocker-download/cmthome/cmthome-${{ matrix.bossversion }}.tar.gz" 2> /dev/null && \
+          curl --head --silent --fail "https://ep1.rub.de/~jreher/bossdocker-download/cache/cvmfs-cache-${{ matrix.bossversion }}.tar.gz" 2> /dev/null && \
+          curl --head --silent --fail "https://ep1.rub.de/~jreher/bossdocker-download/testrelease/TestRelease-${{ matrix.bossversion }}.tar.gz" 2> /dev/null ; then
+            echo "Staging files for version $p for upload."
+            echo "$p" >> versions_processed.txt
+          fi
+        done <versions.txt
+    - name: Stage all versions for upload
+      if: ${{ env.DEPLOY_ALL == 'true' }}
+      run: |
+        cp versions.txt versions_processed.txt
     - name: Convert version list to Matrix
       id: set-matrix 
-      run: echo "::set-output name=matrix::$(cat versions.txt | jq -R -s -c 'split("\n")[:-1]')"
+      run: echo "::set-output name=matrix::$(cat versions_processed.txt | jq -R -s -c 'split("\n")[:-1]')"
 
   process-version:
     needs: list-versions
@@ -37,29 +55,13 @@ jobs:
       matrix:
         bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Test if run is needed
-      id: file-exists-tester
-      run: |
-        mkdir -p out
-        if curl --head --silent --fail "https://ep1.rub.de/~jreher/bossdocker-download/cmthome/cmthome-${{ matrix.bossversion }}.tar.gz" 2> /dev/null && \
-        curl --head --silent --fail "https://ep1.rub.de/~jreher/bossdocker-download/cache/cvmfs-cache-${{ matrix.bossversion }}.tar.gz" 2> /dev/null && \
-        curl --head --silent --fail "https://ep1.rub.de/~jreher/bossdocker-download/testrelease/TestRelease-${{ matrix.bossversion }}.tar.gz" 2> /dev/null ;
-        then
-          echo "::set-output name=needToMake::${{ toJSON(false) }}"
-          touch out/no-run-necessary-${{ matrix.bossversion }}.info
-        else
-          echo "::set-output name=needToMake::${{ toJSON(true) }}"
-        fi
     - name: Run Cachemaker container
-      if: ${{ fromJSON(steps.file-exists-tester.outputs.needToMake) || env.force-all }}
       uses: addnab/docker-run-action@v1
       with:
         image: jreher/boss:utils-cache
         options: --security-opt label=disable --privileged -v ${{ github.workspace }}/out:/out
         run: /root/cachemaker.sh ${{ matrix.bossversion }}
-    - name: Upload tar files
+    - name: Upload tar files as artifact
       uses: actions/upload-artifact@v3
       with:
         name: tarfiles-${{ matrix.bossversion }}
@@ -75,24 +77,14 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Make Restore dir
+    - name: Make artifact restore directory
       run: mkdir -p out
-    - name: Restore tar files
+    - name: Restore tar files from artifact
       uses: actions/download-artifact@v3
       with:
         name: tarfiles-${{ matrix.bossversion }}
         path: out
-    - name: Test if push is needed
-      id: file-exists-tester
-      run: |
-        if [ -f "out/no-run-necessary-${{ matrix.bossversion }}.info" ];
-        then
-          echo "::set-output name=needToPush::${{ toJSON(false) }}"
-        else
-          echo "::set-output name=needToPush::${{ toJSON(true) }}"
-        fi
     - name: Upload cmthome files
-      if: ${{ fromJSON(steps.file-exists-tester.outputs.needToPush) || env.force-all }}
       uses: nogsantos/scp-deploy@master
       with:
         src: out/cmthome-${{ matrix.bossversion }}.tar.gz
@@ -102,7 +94,6 @@ jobs:
         user: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
     - name: Upload TestRelease files
-      if: ${{ fromJSON(steps.file-exists-tester.outputs.needToPush) || env.force-all }}
       uses: nogsantos/scp-deploy@master
       with:
         src: out/TestRelease-${{ matrix.bossversion }}.tar.gz
@@ -112,7 +103,6 @@ jobs:
         user: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
     - name: Upload cvmfs-cache files
-      if: ${{ fromJSON(steps.file-exists-tester.outputs.needToPush) || env.force-all }}
       uses: nogsantos/scp-deploy@master
       with:
         src: out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
@@ -129,13 +119,13 @@ jobs:
       matrix:
         bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
     steps:
-      - name: Write small dummies to replace artifacts
+      - name: Create small dummies
         run: |
           mkdir -p out
           touch out/cmthome-${{ matrix.bossversion }}.tar.gz
           touch out/testrelease-${{ matrix.bossversion }}.tar.gz
           touch out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
-      - name: Upload dummies
+      - name: Replace large artifacts with dummies
         uses: actions/upload-artifact@v3
         with:
           name: tarfiles-${{ matrix.bossversion }}
