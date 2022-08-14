@@ -72,7 +72,7 @@ jobs:
     - name: Build and push main
       uses: docker/build-push-action@v2
       with:
-        context: bossdocker
+        context: .
         push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max

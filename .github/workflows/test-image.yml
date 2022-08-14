@@ -33,7 +33,7 @@ jobs:
     - name: Lint Dockerfile
       uses: ghe-actions/dockerfile-validator@v1
       with:
-        dockerfile: 'bossdocker/Dockerfile'
+        dockerfile: 'Dockerfile'
 
   lint-base-dockerfile:
     runs-on: ubuntu-latest
@@ -101,7 +101,7 @@ jobs:
     - name: Build main and push to local registry
       uses: docker/build-push-action@v3
       with:
-        context: bossdocker
+        context: .
         push: true
         tags: localhost:5000/jreher/boss:latest
         cache-from: type=gha
@@ -111,7 +111,7 @@ jobs:
     - name: Build install and push to local registry
       uses: docker/build-push-action@v3
       with:
-        context: bossdocker
+        context: bossdocker-installboss
         push: true
         tags: localhost:5000/jreher/boss:utils-install
         cache-from: type=gha
@@ -121,7 +121,7 @@ jobs:
     - name: Build cache and push to local registry
       uses: docker/build-push-action@v3
       with:
-        context: bossdocker
+        context: bossdocker-installboss-cache
         push: true
         tags: localhost:5000/jreher/boss:utils-cache
         cache-from: type=gha
