@@ -57,3 +57,13 @@ jobs:
     - name: Check matrix output
       run: |
         echo "${{ steps.set-matrix.outputs.matrix }}"
+
+  process-versions:
+    needs: list-versions
+    strategy:
+      matrix:
+        bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
+    steps:
+    - name: Echo version
+      run: |
+        echo "${{ matrix.bossversion }}"
