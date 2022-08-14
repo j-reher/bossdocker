@@ -39,30 +39,4 @@ source /root/setup.sh
 
 
 # Old Versions on Dockerhub
-Older versions are optimized for use in the EP1 infrastructure, but only offer BOSS 7.0.3. They are available using the tags `release-7.0.3`, `test-7.0.3`, `release-7.0.3-light` and `test-7.0.3-light`.
-
-The code for these old versions can be found in the EP1 gitlab and requires an EP1 account to access.
-## Boss Docker
-This Docker Container provides a full installation is intended to provide fast and easy testing of boss analysis code on any system.
-It is not (yet) intended or suited for use in a batch environment!
-For proper function, you should mount two external directories: /workarea for your analysis code, and /data for both the example data to analyse and the output.
-
-## Boss Docker Light
-This Lightweight version of the BOSS Docker Container is intended to be run in an environment in which a full installation is provided in a central place, with many users accessing it.
-To function properly, three external directories need to be mounted to /boss, /workarea and /data, and the directory mounted to /boss must contain an existing boss installation (as created by the full container).
-
-Example Command in EP1 environment:
-```tcsh
-docker run -it \
-    --replace \
-    --restart unless-stopped \
-    --user ${UID}:${GID} \
-    --userns keep-id \
-    --name boss-light \
-    --log-opt max-size=50m \
-    -v /BOSS/:/boss:ro \
-    -v /home/${USER}/workarea:/workarea:Z \
-    -v /home/${USER}/bossdata:/data:Z \
-    --security-opt label=disable \
-    jreher/boss:7.0.3-light /bin/bash
-```
+Older versions using a completely different approach to offer BOSS 7.0.3 either as a huge image or in EP1 infrastructure, are still available using the tags `release-7.0.3`, `test-7.0.3`, `release-7.0.3-light` and `test-7.0.3-light` on dockerhub. The code for these old versions is located in the EP1 gitlab and requires an EP1 LDAP account to access.
