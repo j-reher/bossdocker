@@ -1,33 +1,41 @@
-[![Lint](https://github.com/j-reher/bossdocker/actions/workflows/test-image-lintonly.yml/badge.svg)](https://github.com/j-reher/bossdocker/actions/workflows/test-image-lintonly.yml) [![Build and test](https://github.com/j-reher/bossdocker/actions/workflows/test-image.yml/badge.svg?branch=main&event=push)](https://github.com/j-reher/bossdocker/actions/workflows/test-image.yml) [![Deploy to Dockerhub](https://github.com/j-reher/bossdocker/actions/workflows/deploy-image.yml/badge.svg?branch=main)](https://github.com/j-reher/bossdocker/actions/workflows/deploy-image.yml)
+[![Build and test](https://github.com/j-reher/bossdocker/actions/workflows/test-image.yml/badge.svg?branch=main&event=push)](https://github.com/j-reher/bossdocker/actions/workflows/test-image.yml) [![Deploy to Dockerhub](https://github.com/j-reher/bossdocker/actions/workflows/deploy-image.yml/badge.svg?branch=main)](https://github.com/j-reher/bossdocker/actions/workflows/deploy-image.yml) [![Deploy .tar.gz files](https://github.com/j-reher/bossdocker/actions/workflows/deploy-tarfiles.yml/badge.svg?branch=main)](https://github.com/j-reher/bossdocker/actions/workflows/deploy-tarfiles.yml) [![Deploy all versions](https://github.com/j-reher/bossdocker/actions/workflows/deploy-all-versions.yml/badge.svg?branch=main)](https://github.com/j-reher/bossdocker/actions/workflows/deploy-all-versions.yml)
 # Boss in Docker
 
-This repository contains my second run at creating a docker container to run the BesII Offline Software System (BOSS).
-This software suite does not function well on modern operating systems, and is very difficult to configure even on older ones, so containerization is by far the best option for average users to run it on development machines.
+The [BesIII Offline Software System (BOSS)](http://english.ihep.cas.cn/bes/re/os/), used to process data and monte-carlo from the BESIII experiment does not function well on modern operating systems. Even on a supported system, is notoriously difficult to configure. At the same time, running BOSS locally is helpful for many users since it disconnects their development environment from the computing cluster, avoids large latencies from ssh-ing to asia, and even allows integration of BOSS with code editors and IDEs.
 
-The image is based on the one published by the BESIII collaboration as jemtchou/boss, and modified to make it easier to mount a workarea, work in a shell within the container, and compile Yapp code without error.
+The easiest solution for average users to run BOSS on development machines is containerization. This is based on Centos 7 and mounts required data from the ihep using the [CVMFS](https://cernvm.cern.ch/fs/) file system to ensure the image size remains manageable.
+
+The image itself is approximately 500 MB in size and includes another ~500 MB in CVMFS-Cache from common operations, which significantly speeds up runtime and is enough to avoid most noticeable delays when compared to running at the computing cluster. If you wish to run CVMFS in your host enviornment, for example because of several users running bossdocker, mounting it as an external volume through docker is [supported as well](#using-external-cvmfs).
 
 # Working with bossdocker
-The bossdockercontainer container runs in the background while still using the host system as development environment. Using the included scripts, the essential BOSS commands `boss.exe` and `cmt` are run within the container environment without ever having to open a container shell.
+The BOSS container container is intended to run in the background while the user still uses their host system as development environment. Using the included scripts, essential BOSS software can be run within the container environment without ever having to open a container shell.
 
-Alternatively, the container can function as an interactive development environment with a bash shell and essential development tools.
+If BOSS functions are needed that are do not have a corresponding shell script, a bash shell can be opened within the container. If you find yourself using this repeatedly, you should consider also opening an issue so the missing feature can be added to the shell scripts!
 
-## Work with BOSS in container
-Five scripts are included that, when placed in your `$PATH`, allow you to work with the boss container almost as if boss was installed on your host system.
-For them to work, your working directory must be structured as `*/workarea/Yapp/*`. The `Yapp` folder assumes you are using an [EP1 Yapp-package](https://gitlab.ep1.rub.de/Bes3/Yapp) for your analysis code. If that is not the case, create an empty dummy folder inside the workarea for running `initboss.sh`, everything will work as long as your code is somewhere inside the `workarea`.
-Starting the container is only possible inside tye `/workarea/Yapp` folder for now, all other commands function anywhere inside `/workarea`.
+## Included shell scripts
+Five scripts are included that allow you to work with the boss container almost as if boss was installed on your host system. Consider placing them in your `$PATH` so you can use boss as if it was installed on your host system.
 
-- `initboss.sh` and `stopboss.sh` to start and stop the container.
-- `cmt.sh` to runs `cmt` commands in the container.
-- `boss.sh` to execute `boss.exe` in the container.
-- `boss_shell.sh` to get an interactive shell inside the container.
+### `initboss.sh` and `stopboss.sh`
+When the BOSS container is initialized using `initboss.sh`, the container is started and your workarea is mounted. Usually, your workarea will be the folder that contains your analysis package, for example an [EP1 Yapp-package](https://gitlab.ep1.rub.de/Bes3/Yapp). The shell script automatically determines the workarea from the working directory it is called from.
 
-Support is planned for arbitrary folder structures that just require a folder with a name beginning with `workarea`, to simplify use of multiple workareas for different versions.
+At this time, your working directory must still be structured as `*/workarea/Yapp/*` to be recongnized by the `initboss.sh` script, and the script must be called from within the `Yapp` folder. This behavior is expected to change very soon in favor of a more convenient approach - for now, if you do not use a Yapp package, simply create an empty dummy folder inside your workarea and call `initboss.sh` from there, or modify the shell script to match your needs.
 
-## Container as interactive development environment
-If deep proper integration into the system is not possible because the above scripts can't be placed conveniently, the container can still be run interactively.
-The script `interactiveboss.sh` will start the container with an interactive bash shell and detect your workarea from your current working directory, assuming it is inside a Yapp package.
+You can shut down the container at any time by calling `stopboss.sh`.
 
-Alternatively, the following docker command can be used (make sure to replace your workarea path):
+### `cmt.sh` and `boss.exe.sh`
+The most common operations to be performed on development machines should be compiling analysis code using `cmt` and running it using `boss.exe`. These scripts do just that.
+
+Please note that `cmt.sh` and `boss.exe.sh` only function when called from a location that is mounted in your BOSS container (within your workarea).
+
+### `boss_shell.sh`
+If actions not supported by the above scripts are required, you can always use this script to enter a `bash` shell inside the container and continue from there.
+
+Beware that to reduce container size, lots of software commonly used for interactive development is not installed, for example there is neither `vim`, not `emacs` or `git`. If you plan on using the interactive mode for development, you should consider modifying `bossdocker/Dockerfile` to install some of these essentials and rebuilding the image.
+
+## Purely interactive use (`interactiveboss.sh`)
+Similar to the result of using `boss_shell.sh` described above, the container can be run purely interactively, removing the need for `initboss.sh` and `stopboss.sh` in this scenario. The script `interactiveboss.sh` will start the container with an interactive bash shell and detect your workarea from your current working directory, assuming it is inside a Yapp package.
+
+Purists may also use the following docker command (make sure to plug in your workarea path):
 ```
 docker run --security-opt label=disable -it --rm -v /absolute/path/to/workarea:/root/workarea --privileged jreher/boss
 ```
@@ -37,6 +45,20 @@ source /root/mount.sh
 source /root/setup.sh
 ```
 
+# Using external cvmfs
+The cvmfs instance included in this container mounts a remote directory that contains BOSS itself and most of its dependencies. This directory is very large, meaning that it can't realistically be included with the image, and even hosting it locally is not advisable. The cache included with the image mitigates most delays incurred by CVMFS needing to access the remote repository, but of course not all of them.
+
+If you plan on using the BOSS container in an environment in which several users have access to a shared file system, you should consider running CVMFS on one of your file servers to mount the remote directory there. In this case, you can extend the docker instructions in `initboss.sh` to mount your local copy into the container. CVMFS is automatically disabled within the container if the directory is populated in this way.
+
+In this case, you could also modify `bossdocker/Dockerfile` to skip adding a prebuilt cvmfs-cache to the image by removing the following line, which significantly reduces the size of the image:
+```
+RUN mkdir -p /var/cvmfs && curl https://ep1.rub.de/~jreher/bossdocker-download/cache/cvmfs-cache-$BOSS_VERSION.tar.gz | tar xzf - -C /
+``` 
+
+Increased support for this feature is considered for the future and may include:
+* A preconfigured CVMFS container that you can run as a system service to mount the required directories
+* Modified versions of `initboss.sh` and `interactiveboss.sh` that mount an external cvmfs directory
+* BOSS images without cvmfs installation or cache, to be used with a cvmfs directory mounted from the outside.
 
 # Old Versions on Dockerhub
 Older versions are optimized for use in the EP1 infrastructure, but only offer BOSS 7.0.3. They are available using the tags `release-7.0.3`, `test-7.0.3`, `release-7.0.3-light` and `test-7.0.3-light`.
