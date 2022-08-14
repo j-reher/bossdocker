@@ -75,7 +75,7 @@ jobs:
     - name: Build and push image
       uses: docker/build-push-action@v2
       with:
-        context: "{{defaultContext}}:bossdocker-base"
+        context: "{{defaultContext}}:bossdocker"
         push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
