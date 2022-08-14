@@ -59,6 +59,7 @@ jobs:
         echo "${{ steps.set-matrix.outputs.matrix }}"
 
   process-versions:
+    runs-on: ubuntu-latest
     needs: list-versions
     strategy:
       matrix:
