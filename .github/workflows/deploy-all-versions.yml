@@ -65,6 +65,14 @@ jobs:
       matrix:
         bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
     steps:
-    - name: Echo version
-      run: |
-        echo "${{ matrix.bossversion }}"
+    - name: Build and push image
+      uses: docker/build-push-action@v2
+      with:
+        context: bossdocker-base
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-args: |
+          BOSS_VERSION=${{ matrix.bossversion }}
+        tags: |
+          jreher/boss:${{ matrix.bossversion }}
