@@ -42,7 +42,9 @@ jobs:
         cache-to: type=gha,mode=max
         tags: |
           jreher/boss:utils-base
+          jreher/boss-utils:base
           ghcr.io/${{ github.repository_owner }}/boss:utils-base
+          ghcr.io/${{ github.repository_owner }}/boss-utils:base
     - name: Build and push install
       uses: docker/build-push-action@v2
       with:
@@ -52,7 +54,9 @@ jobs:
         cache-to: type=gha,mode=max
         tags: |
           jreher/boss:utils-install
+          jreher/boss-utils:mkinstall
           ghcr.io/${{ github.repository_owner }}/boss:utils-install
+          ghcr.io/${{ github.repository_owner }}/boss-utils:mkinstall
     - name: Build and push installcache
       uses: docker/build-push-action@v2
       with:
@@ -62,7 +66,9 @@ jobs:
         cache-to: type=gha,mode=max
         tags: |
           jreher/boss:utils-cache
+          jreher/boss-utils:mkcache
           ghcr.io/${{ github.repository_owner }}/boss:utils-cache
+          ghcr.io/${{ github.repository_owner }}/boss-utils:mkcache
     - name: Build and push main
       uses: docker/build-push-action@v2
       with:
