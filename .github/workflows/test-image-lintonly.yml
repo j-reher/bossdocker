@@ -27,7 +27,7 @@ jobs:
     - name: Lint Dockerfile
       uses: ghe-actions/dockerfile-validator@v1
       with:
-        dockerfile: 'bossdocker/Dockerfile'
+        dockerfile: 'Dockerfile'
 
   lint-base-dockerfile:
     runs-on: ubuntu-latest
