@@ -5,6 +5,7 @@ on:
     workflows: ["Deploy .tar.gz files","Deploy Image -- Latest"]
     types:
       - completed
+    branches: ["main"]
   workflow_dispatch:
     inputs:
       deploy-all:
