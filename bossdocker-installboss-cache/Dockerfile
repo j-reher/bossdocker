@@ -1,6 +1,6 @@
-ARG REPOSITORY=""
+ARG REPOSITORY="jreher/"
 
-FROM ${REPOSITORY}jreher/boss:utils-install
+FROM ${REPOSITORY}boss-utils:mkinstall
 
 LABEL org.opencontainers.image.version="2.0.0" \
       org.opencontainers.image.title="BOSS Utilities" \

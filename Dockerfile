@@ -1,6 +1,6 @@
-ARG REPOSITORY=""
+ARG REPOSITORY="jreher/"
 
-FROM ${REPOSITORY}jreher/boss:utils-base
+FROM ${REPOSITORY}boss-utils:base
 
 LABEL org.opencontainers.image.version="2.0.0" \
       org.opencontainers.image.title="BOSS" \

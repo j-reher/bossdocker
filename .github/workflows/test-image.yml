@@ -95,9 +95,29 @@ jobs:
       with:
         context: bossdocker-base
         push: true
-        tags: localhost:5000/jreher/boss:utils-base
+        tags: localhost:5000/jreher/boss-utils:base
         cache-from: type=gha
         cache-to: type=gha,mode=max
+    - name: Build install and push to local registry
+      uses: docker/build-push-action@v3
+      with:
+        context: bossdocker-installboss
+        push: true
+        tags: localhost:5000/jreher/boss-utils:mkinstall
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-args: |
+          REPOSITORY=localhost:5000/jreher/
+    - name: Build cache and push to local registry
+      uses: docker/build-push-action@v3
+      with:
+        context: bossdocker-installboss-cache
+        push: true
+        tags: localhost:5000/jreher/boss-utils:mkcache
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-args: |
+          REPOSITORY=localhost:5000/jreher/
     - name: Build main and push to local registry
       uses: docker/build-push-action@v3
       with:
@@ -107,27 +127,7 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
         build-args: |
-          REPOSITORY=localhost:5000/
-    - name: Build install and push to local registry
-      uses: docker/build-push-action@v3
-      with:
-        context: bossdocker-installboss
-        push: true
-        tags: localhost:5000/jreher/boss:utils-install
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-        build-args: |
-          REPOSITORY=localhost:5000/
-    - name: Build cache and push to local registry
-      uses: docker/build-push-action@v3
-      with:
-        context: bossdocker-installboss-cache
-        push: true
-        tags: localhost:5000/jreher/boss:utils-cache
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-        build-args: |
-          REPOSITORY=localhost:5000/
+          REPOSITORY=localhost:5000/jreher/
 
     - name: Test sim, reco and ana with boss.exe 
       uses: addnab/docker-run-action@v3
