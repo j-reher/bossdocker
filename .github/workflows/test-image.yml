@@ -95,25 +95,15 @@ jobs:
       with:
         context: bossdocker-base
         push: true
-        tags: localhost:5000/jreher/boss:utils-base
+        tags: localhost:5000/jreher/boss-utils:base
         cache-from: type=gha
         cache-to: type=gha,mode=max
-    - name: Build main and push to local registry
-      uses: docker/build-push-action@v3
-      with:
-        context: .
-        push: true
-        tags: localhost:5000/jreher/boss:latest
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-        build-args: |
-          REPOSITORY=localhost:5000/jreher/
     - name: Build install and push to local registry
       uses: docker/build-push-action@v3
       with:
         context: bossdocker-installboss
         push: true
-        tags: localhost:5000/jreher/boss:utils-install
+        tags: localhost:5000/jreher/boss-utils:mkinstall
         cache-from: type=gha
         cache-to: type=gha,mode=max
         build-args: |
@@ -123,7 +113,17 @@ jobs:
       with:
         context: bossdocker-installboss-cache
         push: true
-        tags: localhost:5000/jreher/boss:utils-cache
+        tags: localhost:5000/jreher/boss-utils:mkcache
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-args: |
+          REPOSITORY=localhost:5000/jreher/
+    - name: Build main and push to local registry
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        push: true
+        tags: localhost:5000/jreher/boss:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
         build-args: |
