@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # Default values:
+# Default values:
 FULLPATH=$(pwd)
-
-WORKAREA=${FULLPATH%Yapp*}
+TEMPPATH1=${FULLPATH%Yapp*}
+WORKAREA=${TEMPPATH1%TestRelease/*}
 PERSISTCACHE=0;
 REPOSITORY="";
 CONTAINER_VERSION="latest"
