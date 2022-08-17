@@ -56,12 +56,17 @@ jobs:
       matrix:
         bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
     steps:
-    - name: Run Cachemaker container
-      uses: addnab/docker-run-action@v1
-      with:
-        image: jreher/boss-utils:mkcache
-        options: --security-opt label=disable --privileged -v ${{ github.workspace }}/out:/out
-        run: /root/cachemaker.sh ${{ matrix.bossversion }}
+    - name: Create dummies
+      run: |
+        touch out/cmthome-${{ matrix.bossversion }}.tar.gz
+        touch out/TestRelease-${{ matrix.bossversion }}.tar.gz
+        touch out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
+    # - name: Run Cachemaker container
+    #   uses: addnab/docker-run-action@v1
+    #   with:
+    #     image: jreher/boss-utils:mkcache
+    #     options: --security-opt label=disable --privileged -v ${{ github.workspace }}/out:/out
+    #     run: /root/cachemaker.sh ${{ matrix.bossversion }}
     - name: Upload tar files as artifact
       uses: actions/upload-artifact@v3
       with:
@@ -100,7 +105,7 @@ jobs:
       with:
         username: '${{ secrets.SFTP_USER }}'
         server: 'ssh.strato.de'
-        ssh_private_key: ${{ secrets.SFTP_PRIVATE_KEY }} 
+        ssh_private_key: ${{ secrets.SFTP_PRIVATE_KEY }}
         local_path: 'out/cmthome-${{ matrix.bossversion }}.tar.gz'
         remote_path: '/cmthome'
         # args: '-o ConnectTimeout=5'
