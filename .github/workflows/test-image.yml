@@ -74,6 +74,8 @@ jobs:
       uses: azohra/shell-linter@latest
       with:
         path: "scripts/*.sh"
+      env:
+        SHELLCHECK_OPTS: -e SC2086
   
   build-and-test:
     needs: [lint-bossdocker-dockerfile, lint-base-dockerfile, lint-install-dockerfile, lint-cache-dockerfile, lint-shellscripts]
