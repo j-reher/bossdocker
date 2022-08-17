@@ -18,12 +18,12 @@ jobs:
     - name: Push readme to dockerhub main
       uses: peter-evans/dockerhub-description@v3
       with:
-        username: ${{ secrets.dockerhub_login }}
+        username: jreher
         password: ${{ secrets.dockerhub_pass }}
         repository: jreher/boss
     - name: Push readme to dockerhub utils
       uses: peter-evans/dockerhub-description@v3
       with:
-        username: ${{ secrets.dockerhub_login }}
+        username: jreher
         password: ${{ secrets.dockerhub_pass }}
         repository: jreher/boss-utils
