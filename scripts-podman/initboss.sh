@@ -60,7 +60,10 @@ if podman container inspect bosscontainer >& /dev/null ; then
     exit 1
 fi
 
-printf 'Starting %sjreher/boss:%s and mounting %s as workarea\n' "$REPOSITORY" "$CONTAINER_VERSION" "$WORKAREA"
+printf 'Checking if %sjreher/boss:%s is up to date:\n' "$REPOSITORY" "$CONTAINER_VERSION"
+podman pull "${REPOSITORY}jreher/boss:$CONTAINER_VERSION" 1> /dev/null
+
+printf 'Starting container and mounting %s as workarea\n' "$REPOSITORY" "$CONTAINER_VERSION" "$WORKAREA"
 export WORKAREA
 
 CACHEARG=""
@@ -68,6 +71,4 @@ if [ $PERSISTCACHE == 1 ] ; then
     CACHEARG="-v cvmfs_cache_$CONTAINER_VERSION:/var/cvmfs/cache "
     podman volume inspect "cvmfs_cache_$CONTAINER_VERSION" >& /dev/null || echo "Creating cvmfs-cache volume for Version $CONTAINER_VERSION. BOSS might be slow while it's being populated!"
 fi
-
-podman pull "${REPOSITORY}jreher/boss:$CONTAINER_VERSION"
 podman run --rm -dt --security-opt label=disable ${CACHEARG}-v "$WORKAREA":/root/workarea --name bosscontainer --init --privileged "${REPOSITORY}jreher/boss:$CONTAINER_VERSION" 1>/dev/null
