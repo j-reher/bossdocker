@@ -58,11 +58,14 @@ if docker container inspect bosscontainer >& /dev/null ; then
     exit 1
 fi
 
+printf 'Checking if %sjreher/boss:%s is up to date:\n' "$REPOSITORY" "$CONTAINER_VERSION"
+docker pull "${REPOSITORY}jreher/boss:$CONTAINER_VERSION" 1> /dev/null
+
 CACHEARG=""
 if [ $PERSISTCACHE == 1 ] ; then
     CACHEARG="-v cvmfs_cache_$CONTAINER_VERSION:/var/cvmfs/cache "
     docker volume inspect "cvmfs_cache_$CONTAINER_VERSION" >& /dev/null || echo "Creating cvmfs-cache volume for Version $CONTAINER_VERSION. BOSS might be slow while it's being populated!"
 fi
 
-docker pull "${REPOSITORY}jreher/boss:$CONTAINER_VERSION"
+
 docker run --security-opt label=disable -it --rm $CACHEARG -v "$WORKAREA":/root/workarea --privileged "${REPOSITORY}jreher/boss:$CONTAINER_VERSION"
