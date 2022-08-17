@@ -21,10 +21,11 @@ RUN mkdir -p /root/cmthome && curl https://ep1.rub.de/~jreher/bossdocker-downloa
 RUN mkdir -p /workarea/TestRelease && curl https://ep1.rub.de/~jreher/bossdocker-download/testrelease/TestRelease-$BOSS_VERSION.tar.gz | tar xzf - -C /
 RUN mkdir -p /var/cvmfs && curl https://ep1.rub.de/~jreher/bossdocker-download/cache/cvmfs-cache-$BOSS_VERSION.tar.gz | tar xzf - -C /
 
-RUN echo "source /root/cmthome/setupCMT.sh" >> /root/setup.sh && \
+RUN cp /root/workarea/TestRelease/TestRelease-*/cmt/setup.sh setupTestRelease.sh && \
+    echo "source /root/cmthome/setupCMT.sh" >> /root/setup.sh && \
     echo "source /root/cmthome/setup.sh" >> /root/setup.sh && \
-    cp /root/workarea/TestRelease/TestRelease-*/cmt/setup.sh setupTestRelease.sh && \
     echo "source /root/setupTestRelease.sh" >> /root/setup.sh && \
+    echo "export WORKAREA=/root/workarea" >> /root/setup.sh && \
     echo "if [ ! -n \"\$(ls -A /cvmfs/bes3.ihep.ac.cn 2>/dev/null)\" ] ; then" >> /root/mount.sh && \
     echo "    mount -a" >> /root/mount.sh && \
     echo "fi" >> /root/mount.sh && \
