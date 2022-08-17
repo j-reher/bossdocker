@@ -15,7 +15,7 @@ on:
         description: Remake all images instead of only the missing ones.
 
 env:
-  DEPLOY_ALL: ${{ ( github.event_name == 'workflow_run' && github.event.workflow == 'Deploy Image -- Latest' ) || ( github.event_name == 'workflow_dispatch' && github.event.inputs.deploy-all == 'true' ) }}
+  DEPLOY_ALL: ${{ ( github.event_name == 'workflow_run' && github.event.workflow.name == 'Deploy Image -- Latest' ) || ( github.event_name == 'workflow_dispatch' && github.event.inputs.deploy-all == 'true' ) }}
 
 jobs:
   echo-caller:
