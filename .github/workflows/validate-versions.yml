@@ -6,6 +6,7 @@ on:
     - main
     paths:
     - 'versions.txt'
+    - '.github/workflows/validate-versions.yml'
   workflow_dispatch:
 
 jobs:
