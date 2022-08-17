@@ -21,6 +21,10 @@ RUN mkdir -p /root/cmthome && curl http://boss.janreher.de/cmthome/cmthome-$BOSS
 RUN mkdir -p /workarea/TestRelease && curl http://boss.janreher.de/testrelease/TestRelease-$BOSS_VERSION.tar.gz | tar xzf - -C /
 RUN mkdir -p /var/cvmfs && curl http://boss.janreher.de/cache/cvmfs-cache-$BOSS_VERSION.tar.gz | tar xzf - -C /
 
+RUN yum -y install libXpm-devel libXi-devel && \
+    yum -y clean all && \
+    rm -rf /var/cache/yum
+
 RUN cp /root/workarea/TestRelease/TestRelease-*/cmt/setup.sh setupTestRelease.sh && \
     echo "source /root/cmthome/setupCMT.sh" >> /root/setup.sh && \
     echo "source /root/cmthome/setup.sh" >> /root/setup.sh && \
