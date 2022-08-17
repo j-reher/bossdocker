@@ -59,7 +59,7 @@ jobs:
     - name: Run Cachemaker container
       uses: addnab/docker-run-action@v1
       with:
-        image: jreher/boss:utils-cache
+        image: jreher/boss-utils:mkcache
         options: --security-opt label=disable --privileged -v ${{ github.workspace }}/out:/out
         run: /root/cachemaker.sh ${{ matrix.bossversion }}
     - name: Upload tar files as artifact
@@ -93,7 +93,7 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         remote: ${{ secrets.SSH_DIR }}/cmthome/
         port: ${{ secrets.SSH_PORT }}
-        user: ${{ secrets.SSH_USER }}
+        user: jreher
         key: ${{ secrets.SSH_KEY }}
     - name: Upload TestRelease files
       uses: nogsantos/scp-deploy@master
@@ -102,7 +102,7 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         remote: ${{ secrets.SSH_DIR }}/testrelease/
         port: ${{ secrets.SSH_PORT }}
-        user: ${{ secrets.SSH_USER }}
+        user: jreher
         key: ${{ secrets.SSH_KEY }}
     - name: Upload cvmfs-cache files
       uses: nogsantos/scp-deploy@master
@@ -111,7 +111,7 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         remote: ${{ secrets.SSH_DIR }}/cache/
         port: ${{ secrets.SSH_PORT }}
-        user: ${{ secrets.SSH_USER }}
+        user: jreher
         key: ${{ secrets.SSH_KEY }}
     
   cleanup:
