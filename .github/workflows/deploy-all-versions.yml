@@ -18,15 +18,8 @@ env:
   DEPLOY_ALL: ${{ ( github.event_name == 'workflow_run' && github.event.workflow.name == 'Deploy Image -- Latest' ) || ( github.event_name == 'workflow_dispatch' && github.event.inputs.deploy-all == 'true' ) }}
 
 jobs:
-  echo-caller:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Version 1
-      if: ${{ env.DEPLOY_ALL == 'true' }}
-      run: |
-        echo "Version 1 worked."
-  
   list-versions:
+    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
