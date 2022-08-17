@@ -17,9 +17,9 @@ LABEL org.opencontainers.image.version="2.0.0" \
 
 ARG BOSS_VERSION="7.0.5"
 
-RUN mkdir -p /root/cmthome && curl https://ep1.rub.de/~jreher/bossdocker-download/cmthome/cmthome-$BOSS_VERSION.tar.gz | tar xzf - -C /
-RUN mkdir -p /workarea/TestRelease && curl https://ep1.rub.de/~jreher/bossdocker-download/testrelease/TestRelease-$BOSS_VERSION.tar.gz | tar xzf - -C /
-RUN mkdir -p /var/cvmfs && curl https://ep1.rub.de/~jreher/bossdocker-download/cache/cvmfs-cache-$BOSS_VERSION.tar.gz | tar xzf - -C /
+RUN mkdir -p /root/cmthome && curl http://boss.janreher.de/cmthome/cmthome-$BOSS_VERSION.tar.gz | tar xzf - -C /
+RUN mkdir -p /workarea/TestRelease && curl http://boss.janreher.de/testrelease/TestRelease-$BOSS_VERSION.tar.gz | tar xzf - -C /
+RUN mkdir -p /var/cvmfs && curl http://boss.janreher.de/cache/cvmfs-cache-$BOSS_VERSION.tar.gz | tar xzf - -C /
 
 RUN cp /root/workarea/TestRelease/TestRelease-*/cmt/setup.sh setupTestRelease.sh && \
     echo "source /root/cmthome/setupCMT.sh" >> /root/setup.sh && \
