@@ -59,7 +59,7 @@ jobs:
     - name: Run Cachemaker container
       uses: addnab/docker-run-action@v1
       with:
-        image: jreher/boss:utils-cache
+        image: jreher/boss-utils:mkcache
         options: --security-opt label=disable --privileged -v ${{ github.workspace }}/out:/out
         run: /root/cachemaker.sh ${{ matrix.bossversion }}
     - name: Upload tar files as artifact
