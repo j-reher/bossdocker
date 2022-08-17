@@ -17,7 +17,7 @@ jobs:
       uses: actions/checkout@v3
     - name: Validate Versions
       run: |
-        docker run --rm --init --privileged jreher/boss:utils-base bash -c "mount -a >>/dev/null && ls -1 /cvmfs/bes3.ihep.ac.cn/bes3sw/Boss" >> valid_versions.txt
+        docker run --rm --init --privileged jreher/boss-utils:base bash -c "mount -a >>/dev/null && ls -1 /cvmfs/bes3.ihep.ac.cn/bes3sw/Boss" >> valid_versions.txt
         while IFS="" read -r p || [ -n "$p" ]
         do
             if grep -q $p "valid_versions.txt"; then
