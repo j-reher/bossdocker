@@ -25,4 +25,4 @@ fi
 
 CDPATH="/root/workarea/$SUBDIR"
 
-docker exec --workdir "$CDPATH" bosscontainer bash -c "source /root/setup.sh && boss.exe $* && chown -R $(id -u):$(id -g) $CDPATH"
+docker exec --workdir "$CDPATH" bosscontainer bash -c "source /root/setup.sh && boss.exe $* ; chown -R $(id -u):$(id -g) $CDPATH"
