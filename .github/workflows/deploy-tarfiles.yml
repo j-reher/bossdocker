@@ -56,18 +56,12 @@ jobs:
       matrix:
         bossversion: ${{ fromJson(needs.list-versions.outputs.matrix) }}
     steps:
-    - name: Create dummies
-      run: |
-        mkdir out
-        touch out/cmthome-${{ matrix.bossversion }}.tar.gz
-        touch out/TestRelease-${{ matrix.bossversion }}.tar.gz
-        touch out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
-    # - name: Run Cachemaker container
-    #   uses: addnab/docker-run-action@v1
-    #   with:
-    #     image: jreher/boss-utils:mkcache
-    #     options: --security-opt label=disable --privileged -v ${{ github.workspace }}/out:/out
-    #     run: /root/cachemaker.sh ${{ matrix.bossversion }}
+    - name: Run Cachemaker container
+      uses: addnab/docker-run-action@v1
+      with:
+        image: jreher/boss-utils:mkcache
+        options: --security-opt label=disable --privileged -v ${{ github.workspace }}/out:/out
+        run: /root/cachemaker.sh ${{ matrix.bossversion }}
     - name: Upload tar files as artifact
       uses: actions/upload-artifact@v3
       with:
@@ -92,15 +86,6 @@ jobs:
       with:
         name: tarfiles-${{ matrix.bossversion }}
         path: out
-    # - name: Upload cmthome files
-    #   uses: nogsantos/scp-deploy@master
-    #   with:
-    #     src: out/cmthome-${{ matrix.bossversion }}.tar.gz
-    #     host: ${{ secrets.SSH_HOST }}
-    #     remote: ${{ secrets.SSH_DIR }}/cmthome/
-    #     port: ${{ secrets.SSH_PORT }}
-    #     user: ${{ secrets.SSH_USER }}
-    #     key: ${{ secrets.SSH_KEY }}
     - name: Upload cmthome files -- SFTP
       uses: wlixcc/SFTP-Deploy-Action@v1.0
       with:
@@ -109,16 +94,6 @@ jobs:
         ssh_private_key: ${{ secrets.SFTP_PRIVATE_KEY }}
         local_path: 'out/cmthome-${{ matrix.bossversion }}.tar.gz'
         remote_path: '/cmthome'
-        # args: '-o ConnectTimeout=5'
-    # - name: Upload TestRelease files
-    #   uses: nogsantos/scp-deploy@master
-    #   with:
-    #     src: out/TestRelease-${{ matrix.bossversion }}.tar.gz
-    #     host: ${{ secrets.SSH_HOST }}
-    #     remote: ${{ secrets.SSH_DIR }}/testrelease/
-    #     port: ${{ secrets.SSH_PORT }}
-    #     user: ${{ secrets.SSH_USER }}
-    #     key: ${{ secrets.SSH_KEY }}
     - name: Upload TestRelease files -- SFTP
       uses: wlixcc/SFTP-Deploy-Action@v1.0
       with:
@@ -127,15 +102,6 @@ jobs:
         ssh_private_key: ${{ secrets.SFTP_PRIVATE_KEY }} 
         local_path: 'out/TestRelease-${{ matrix.bossversion }}.tar.gz'
         remote_path: '/testrelease'
-    # - name: Upload cvmfs-cache files
-    #   uses: nogsantos/scp-deploy@master
-    #   with:
-    #     src: out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
-    #     host: ${{ secrets.SSH_HOST }}
-    #     remote: ${{ secrets.SSH_DIR }}/cache/
-    #     port: ${{ secrets.SSH_PORT }}
-    #     user: ${{ secrets.SSH_USER }}
-    #     key: ${{ secrets.SSH_KEY }}
     - name: Upload cvmfs-cache files -- SFTP
       uses: wlixcc/SFTP-Deploy-Action@v1.0
       with:
