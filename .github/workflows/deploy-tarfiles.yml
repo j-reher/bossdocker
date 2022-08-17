@@ -58,6 +58,7 @@ jobs:
     steps:
     - name: Create dummies
       run: |
+        mkdir out
         touch out/cmthome-${{ matrix.bossversion }}.tar.gz
         touch out/TestRelease-${{ matrix.bossversion }}.tar.gz
         touch out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
