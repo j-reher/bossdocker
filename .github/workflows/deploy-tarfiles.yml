@@ -86,33 +86,58 @@ jobs:
       with:
         name: tarfiles-${{ matrix.bossversion }}
         path: out
-    - name: Upload cmthome files
-      uses: nogsantos/scp-deploy@master
+    # - name: Upload cmthome files
+    #   uses: nogsantos/scp-deploy@master
+    #   with:
+    #     src: out/cmthome-${{ matrix.bossversion }}.tar.gz
+    #     host: ${{ secrets.SSH_HOST }}
+    #     remote: ${{ secrets.SSH_DIR }}/cmthome/
+    #     port: ${{ secrets.SSH_PORT }}
+    #     user: ${{ secrets.SSH_USER }}
+    #     key: ${{ secrets.SSH_KEY }}
+    - name: Upload cmthome files -- SFTP
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
       with:
-        src: out/cmthome-${{ matrix.bossversion }}.tar.gz
-        host: ${{ secrets.SSH_HOST }}
-        remote: ${{ secrets.SSH_DIR }}/cmthome/
-        port: ${{ secrets.SSH_PORT }}
-        user: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_KEY }}
-    - name: Upload TestRelease files
-      uses: nogsantos/scp-deploy@master
+        username: '${{ secrets.SFTP_USER }}'
+        server: 'ssh.strato.de'
+        password: ${{ secrets.SFTP_PASSWORD }} 
+        local_path: 'out/cmthome-${{ matrix.bossversion }}.tar.gz'
+        remote_path: '/cmthome'
+        # args: '-o ConnectTimeout=5'
+    # - name: Upload TestRelease files
+    #   uses: nogsantos/scp-deploy@master
+    #   with:
+    #     src: out/TestRelease-${{ matrix.bossversion }}.tar.gz
+    #     host: ${{ secrets.SSH_HOST }}
+    #     remote: ${{ secrets.SSH_DIR }}/testrelease/
+    #     port: ${{ secrets.SSH_PORT }}
+    #     user: ${{ secrets.SSH_USER }}
+    #     key: ${{ secrets.SSH_KEY }}
+    - name: Upload TestRelease files -- SFTP
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
       with:
-        src: out/TestRelease-${{ matrix.bossversion }}.tar.gz
-        host: ${{ secrets.SSH_HOST }}
-        remote: ${{ secrets.SSH_DIR }}/testrelease/
-        port: ${{ secrets.SSH_PORT }}
-        user: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_KEY }}
-    - name: Upload cvmfs-cache files
-      uses: nogsantos/scp-deploy@master
+        username: '${{ secrets.SFTP_USER }}'
+        server: 'ssh.strato.de'
+        password: ${{ secrets.SFTP_PASSWORD }} 
+        local_path: 'out/TestRelease-${{ matrix.bossversion }}.tar.gz'
+        remote_path: '/testrelease'
+    # - name: Upload cvmfs-cache files
+    #   uses: nogsantos/scp-deploy@master
+    #   with:
+    #     src: out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
+    #     host: ${{ secrets.SSH_HOST }}
+    #     remote: ${{ secrets.SSH_DIR }}/cache/
+    #     port: ${{ secrets.SSH_PORT }}
+    #     user: ${{ secrets.SSH_USER }}
+    #     key: ${{ secrets.SSH_KEY }}
+    - name: Upload cvmfs-cache files -- SFTP
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
       with:
-        src: out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz
-        host: ${{ secrets.SSH_HOST }}
-        remote: ${{ secrets.SSH_DIR }}/cache/
-        port: ${{ secrets.SSH_PORT }}
-        user: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_KEY }}
+        username: '${{ secrets.SFTP_USER }}'
+        server: 'ssh.strato.de'
+        password: ${{ secrets.SFTP_PASSWORD }} 
+        local_path: 'out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz'
+        remote_path: '/cache'
     
   cleanup:
     needs: [list-versions, deploy-version]
