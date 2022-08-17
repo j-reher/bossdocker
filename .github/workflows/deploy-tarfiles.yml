@@ -96,11 +96,11 @@ jobs:
     #     user: ${{ secrets.SSH_USER }}
     #     key: ${{ secrets.SSH_KEY }}
     - name: Upload cmthome files -- SFTP
-      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      uses: wlixcc/SFTP-Deploy-Action@v1.0
       with:
         username: '${{ secrets.SFTP_USER }}'
         server: 'ssh.strato.de'
-        password: ${{ secrets.SFTP_PASSWORD }} 
+        ssh_private_key: ${{ secrets.SFTP_PRIVATE_KEY }} 
         local_path: 'out/cmthome-${{ matrix.bossversion }}.tar.gz'
         remote_path: '/cmthome'
         # args: '-o ConnectTimeout=5'
@@ -114,11 +114,11 @@ jobs:
     #     user: ${{ secrets.SSH_USER }}
     #     key: ${{ secrets.SSH_KEY }}
     - name: Upload TestRelease files -- SFTP
-      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      uses: wlixcc/SFTP-Deploy-Action@v1.0
       with:
         username: '${{ secrets.SFTP_USER }}'
         server: 'ssh.strato.de'
-        password: ${{ secrets.SFTP_PASSWORD }} 
+        ssh_private_key: ${{ secrets.SFTP_PRIVATE_KEY }} 
         local_path: 'out/TestRelease-${{ matrix.bossversion }}.tar.gz'
         remote_path: '/testrelease'
     # - name: Upload cvmfs-cache files
@@ -131,11 +131,11 @@ jobs:
     #     user: ${{ secrets.SSH_USER }}
     #     key: ${{ secrets.SSH_KEY }}
     - name: Upload cvmfs-cache files -- SFTP
-      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      uses: wlixcc/SFTP-Deploy-Action@v1.0
       with:
         username: '${{ secrets.SFTP_USER }}'
         server: 'ssh.strato.de'
-        password: ${{ secrets.SFTP_PASSWORD }} 
+        ssh_private_key: ${{ secrets.SFTP_PRIVATE_KEY }} 
         local_path: 'out/cvmfs-cache-${{ matrix.bossversion }}.tar.gz'
         remote_path: '/cache'
     
