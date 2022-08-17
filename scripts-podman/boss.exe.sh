@@ -6,7 +6,7 @@ if ! podman container inspect bosscontainer >& /dev/null ; then
 fi
 
 VOLUMESTRING="$(podman inspect -f '{{ .Mounts }}' bosscontainer)"
-TEMPSTRING1=${VOLUMESTRING#*bind}
+TEMPSTRING1=${VOLUMESTRING#*\{bind}
 TEMPSTRING2=${TEMPSTRING1%/root*}
 WORKAREA="$(echo "$TEMPSTRING2" | awk '{$1=$1}1')"
 
