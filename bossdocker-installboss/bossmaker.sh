@@ -17,7 +17,7 @@ compathome=$cmthome-Slc6Centos7Compat
 printf '\nCopy %s to cmthome\n' "$cmthome"
 cp -r "$cmthome"/* /root/cmthome/
 printf "\nMake Adjustments to cmthome/requirements\n"
-sed -i 's/#macro WorkArea \"\/home\/bes\/maqm\/workarea\"/macro WorkArea \"\/root\/workarea\"/g' /root/cmthome/requirements
+sed -i 's@#macro WorkArea.*@macro WorkArea "/root/workarea"@' /root/cmthome/requirements
 sed -i 's/#path_remove/path_remove/g' /root/cmthome/requirements
 sed -i 's/#path_prepend/path_prepend/g' /root/cmthome/requirements
 printf "\nConfigure CMT\n"
