@@ -64,4 +64,5 @@ if [ $PERSISTCACHE == 1 ] ; then
     docker volume inspect "cvmfs_cache_$CONTAINER_VERSION" >& /dev/null || echo "Creating cvmfs-cache volume for Version $CONTAINER_VERSION. BOSS might be slow while it's being populated!"
 fi
 
+docker pull "${REPOSITORY}jreher/boss:$CONTAINER_VERSION"
 docker run --security-opt label=disable -it --rm $CACHEARG -v "$WORKAREA":/root/workarea --privileged "${REPOSITORY}jreher/boss:$CONTAINER_VERSION"
