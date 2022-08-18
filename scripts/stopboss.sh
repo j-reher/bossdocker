@@ -1,5 +1,7 @@
 #!/bin/bash
 
+CONTAINERNAME="bosscontainer-$(id -un)"
+
 CLEARCACHES=0
 
 SHORT=h
@@ -31,11 +33,11 @@ do
     esac
 done
 
-if docker container inspect bosscontainer >& /dev/null ; then
-docker stop bosscontainer >& /dev/null && echo "Boss container was stopped successfully."
+if docker container inspect "$CONTAINERNAME" >& /dev/null ; then
+docker stop "$CONTAINERNAME" >& /dev/null && echo "Boss container was stopped successfully."
 fi
 
-VOLUMES=$(docker volume ls -qf name=cvmfs_cache_)
+VOLUMES=$(docker volume ls -qf name="cvmfs_cache_$(id -un)_")
 if [ $CLEARCACHES == 1 ] && [ "$VOLUMES" != "" ] ; then
     docker volume rm $VOLUMES >& /dev/null && printf 'Removed the following CVMFS cache volumes:\n%-s\n' "$VOLUMES"
 fi

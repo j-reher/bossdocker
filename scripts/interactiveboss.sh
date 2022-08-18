@@ -53,7 +53,7 @@ do
     esac
 done
 
-if docker container inspect bosscontainer >& /dev/null ; then
+if docker container inspect "$CONTAINERNAME" >& /dev/null ; then
     echo "A boss container is already running! Please stop it before starting another."
     exit 1
 fi
