@@ -1,5 +1,7 @@
 #!/bin/bash
 
+CONTAINERNAME="bosscontainer-$(id -un)"
+
 # Default values:
 FULLPATH=$(pwd)
 TEMPPATH1=${FULLPATH%Yapp*}
@@ -7,7 +9,6 @@ WORKAREA=${TEMPPATH1%TestRelease/*}
 PERSISTCACHE=0;
 REPOSITORY="";
 CONTAINER_VERSION="latest"
-
 
 SHORT=w:,p,v:,r:,h
 LONG=workarea:,persistcache,version:,repository:,help
@@ -54,21 +55,21 @@ do
     esac
 done
 
-if docker container inspect bosscontainer >& /dev/null ; then
+if docker container inspect "$CONTAINERNAME" >& /dev/null ; then
     echo "A boss container is already running! Please stop it before starting another."
     exit 1
 fi
 
 printf 'Checking if %sjreher/boss:%s is up to date:\n' "$REPOSITORY" "$CONTAINER_VERSION"
-docker pull "${REPOSITORY}jreher/boss:$CONTAINER_VERSION" 1> /dev/null
+docker pull "${REPOSITORY}jreher/boss:$CONTAINER_VERSION"
 
-printf 'Starting %sjreher/boss:%s and mounting %s as workarea\n' "$REPOSITORY" "$CONTAINER_VERSION" "$WORKAREA"
+printf 'Starting %sjreher/boss:%s as %s and mounting %s as workarea\n' "$REPOSITORY" "$CONTAINER_VERSION" "$CONTAINERNAME" "$WORKAREA"
 export WORKAREA
 
 CACHEARG=""
 if [ $PERSISTCACHE == 1 ] ; then
-    CACHEARG="-v cvmfs_cache_$CONTAINER_VERSION:/var/cvmfs/cache "
-    docker volume inspect "cvmfs_cache_$CONTAINER_VERSION" >& /dev/null || echo "Creating cvmfs-cache volume for Version $CONTAINER_VERSION. BOSS might be slow while it's being populated!"
+    CACHEARG="-v cvmfs_cache_$(id -un)_$CONTAINER_VERSION:/var/cvmfs/cache "
+    docker volume inspect "cvmfs_cache_$(id -un)_$CONTAINER_VERSION" >& /dev/null || echo "Creating cvmfs-cache volume for Version $CONTAINER_VERSION. BOSS might be slow while it's being populated!"
 fi
 
-docker run --rm -dt --security-opt label=disable ${CACHEARG}-v "$WORKAREA":/root/workarea --name bosscontainer --init --privileged "${REPOSITORY}jreher/boss:$CONTAINER_VERSION" 1>/dev/null
+docker run --rm -dt --security-opt label=disable ${CACHEARG}-v "$WORKAREA":/root/workarea --name "$CONTAINERNAME" --init --privileged "${REPOSITORY}jreher/boss:$CONTAINER_VERSION" 1>/dev/null
