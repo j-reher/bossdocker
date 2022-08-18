@@ -1,5 +1,7 @@
 #!/bin/bash
 
+CONTAINERNAME="bosscontainer-$(id -un)"
+
 # Default values:
 # Default values:
 FULLPATH=$(pwd)
@@ -55,7 +57,7 @@ do
     esac
 done
 
-if podman container inspect bosscontainer >& /dev/null ; then
+if podman container inspect "$CONTAINERNAME" >& /dev/null ; then
     echo "A boss container is already running! Please stop it before starting another."
     exit 1
 fi
@@ -68,7 +70,7 @@ export WORKAREA
 
 CACHEARG=""
 if [ $PERSISTCACHE == 1 ] ; then
-    CACHEARG="-v cvmfs_cache_$CONTAINER_VERSION:/var/cvmfs/cache "
-    podman volume inspect "cvmfs_cache_$CONTAINER_VERSION" >& /dev/null || echo "Creating cvmfs-cache volume for Version $CONTAINER_VERSION. BOSS might be slow while it's being populated!"
+    CACHEARG="-v cvmfs_cache_$(id -un)_$CONTAINER_VERSION:/var/cvmfs/cache "
+    podman volume inspect "cvmfs_cache_$(id -un)_$CONTAINER_VERSION" >& /dev/null || echo "Creating cvmfs-cache volume for Version $CONTAINER_VERSION. BOSS might be slow while it's being populated!"
 fi
-podman run --rm -dt --security-opt label=disable ${CACHEARG}-v "$WORKAREA":/root/workarea --name bosscontainer --init --privileged "${REPOSITORY}jreher/boss:$CONTAINER_VERSION" 1>/dev/null
+podman run --rm -dt --security-opt label=disable ${CACHEARG}-v "$WORKAREA":/root/workarea --name "$CONTAINERNAME" --init --privileged "${REPOSITORY}jreher/boss:$CONTAINER_VERSION" 1>/dev/null

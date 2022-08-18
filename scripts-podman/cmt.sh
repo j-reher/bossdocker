@@ -1,11 +1,13 @@
 #!/bin/bash
 
-if ! podman container inspect bosscontainer >& /dev/null ; then
+CONTAINERNAME="bosscontainer-$(id -un)"
+
+if ! podman container inspect "$CONTAINERNAME" >& /dev/null ; then
     echo "Boss container is not running!"
     exit 1
 fi
 
-VOLUMESTRING="$(podman inspect -f '{{ .Mounts }}' bosscontainer)"
+VOLUMESTRING="$(podman inspect -f '{{ .Mounts }}' $CONTAINERNAME)"
 TEMPSTRING1=${VOLUMESTRING#*\{bind}
 TEMPSTRING2=${TEMPSTRING1%/root*}
 WORKAREA="$(echo "$TEMPSTRING2" | awk '{$1=$1}1')"
@@ -25,4 +27,4 @@ fi
 
 CDPATH="/root/workarea/$SUBDIR"
 
-podman exec --workdir "$CDPATH" bosscontainer bash -c "source /root/setup.sh && cmt $*"
+podman exec --workdir "$CDPATH" "$CONTAINERNAME" bash -c "source /root/setup.sh && cmt $*"
