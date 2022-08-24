@@ -12,6 +12,7 @@ on:
     - 'bossdocker-installboss-cache/Dockerfile'
     - '.github/workflows/test-image.yml'
     - 'bossdocker-base/external/*'
+    - 'inputs/*'
   push:
     branches:
     - main
@@ -23,6 +24,7 @@ on:
     - 'bossdocker-installboss-cache/Dockerfile'
     - '.github/workflows/test-image.yml'
     - 'bossdocker-base/external/*'
+    - 'inputs/*'
 
 jobs:
   lint-bossdocker-dockerfile:
@@ -70,12 +72,24 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Run ShellCheck
+    - name: Run ShellCheck for Docker
       uses: azohra/shell-linter@latest
       with:
         path: "scripts/*.sh"
       env:
-        SHELLCHECK_OPTS: -e SC2086
+        SHELLCHECK_OPTS: -e SC2086 -e SC1091
+    - name: Run ShellCheck for Podman
+      uses: azohra/shell-linter@latest
+      with:
+        path: "scripts-podman/*.sh"
+      env:
+        SHELLCHECK_OPTS: -e SC2086 -e SC1091
+    - name: Run ShellCheck for includes
+      uses: azohra/shell-linter@latest
+      with:
+        path: "inputs/*"
+      env:
+        SHELLCHECK_OPTS: -e SC2086 -e SC1091
   
   build-and-test:
     needs: [lint-bossdocker-dockerfile, lint-base-dockerfile, lint-install-dockerfile, lint-cache-dockerfile, lint-shellscripts]
