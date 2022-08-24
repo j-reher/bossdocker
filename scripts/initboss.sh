@@ -73,3 +73,4 @@ if [ $PERSISTCACHE == 1 ] ; then
 fi
 
 docker run --rm -dt --security-opt label=disable ${CACHEARG}-v "$WORKAREA":/root/workarea --name "$CONTAINERNAME" --init --privileged "${REPOSITORY}jreher/boss:$CONTAINER_VERSION" 1>/dev/null
+docker exec "$CONTAINERNAME" chown -R "$(id -u)":"$(id -g)" /root/workarea/
