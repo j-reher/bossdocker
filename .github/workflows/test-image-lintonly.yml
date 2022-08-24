@@ -71,19 +71,19 @@ jobs:
       with:
         path: "scripts/*.sh"
       env:
-        SHELLCHECK_OPTS: -e SC2086
+        SHELLCHECK_OPTS: -e SC2086 SC1090
     - name: Run ShellCheck for Podman
       uses: azohra/shell-linter@latest
       with:
         path: "scripts-podman/*.sh"
       env:
-        SHELLCHECK_OPTS: -e SC2086
+        SHELLCHECK_OPTS: -e SC2086 SC1090
     - name: Run ShellCheck for includes
       uses: azohra/shell-linter@latest
       with:
         path: "inputs/*"
       env:
-        SHELLCHECK_OPTS: -e SC2086
+        SHELLCHECK_OPTS: -e SC2086 SC1090
   
   build-and-test:
     runs-on: ubuntu-latest
