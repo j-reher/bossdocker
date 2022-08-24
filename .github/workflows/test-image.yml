@@ -72,10 +72,22 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Run ShellCheck
+    - name: Run ShellCheck for Docker
       uses: azohra/shell-linter@latest
       with:
         path: "scripts/*.sh"
+      env:
+        SHELLCHECK_OPTS: -e SC2086
+    - name: Run ShellCheck for Podman
+      uses: azohra/shell-linter@latest
+      with:
+        path: "scripts-podman/*.sh"
+      env:
+        SHELLCHECK_OPTS: -e SC2086
+    - name: Run ShellCheck for includes
+      uses: azohra/shell-linter@latest
+      with:
+        path: "inputs/*"
       env:
         SHELLCHECK_OPTS: -e SC2086
   
