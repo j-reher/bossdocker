@@ -25,18 +25,12 @@ RUN yum -y install libXpm-devel libXi-devel && \
     yum -y clean all && \
     rm -rf /var/cache/yum
 
+ADD inputs/dockerinit.sh /root/dockerinit.sh
+ADD inputs/setup.sh /root/setup.sh
+ADD inputs/mount.sh /root/mount.sh
+
 RUN cp /root/workarea/TestRelease/TestRelease-*/cmt/setup.sh setupTestRelease.sh && \
-    echo "source /root/cmthome/setupCMT.sh" >> /root/setup.sh && \
-    echo "source /root/cmthome/setup.sh" >> /root/setup.sh && \
-    echo "source /root/setupTestRelease.sh" >> /root/setup.sh && \
-    echo "export WORKAREA=/root/workarea" >> /root/setup.sh && \
-    echo "if [ ! -n \"\$(ls -A /cvmfs/bes3.ihep.ac.cn 2>/dev/null)\" ] ; then" >> /root/mount.sh && \
-    echo "    mount -a" >> /root/mount.sh && \
-    echo "fi" >> /root/mount.sh && \
-    echo "#!/bin/bash" >> /root/dockerinit.sh && \
-    echo "source /root/mount.sh" >> /root/dockerinit.sh && \
-    echo "source /root/setup.sh" >> /root/dockerinit.sh && \
-    echo "bash -i" >> /root/dockerinit.sh && \
+    cp -r /root/workarea/TestRelease/ /root/TestRelease && \
     chmod u+x /root/dockerinit.sh && \
     # echo "    source /root/mount.sh" >> /root/.bashrc && \
     # echo "    source /root/setup.sh" >> /root/.bashrc && \
