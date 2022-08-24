@@ -1,14 +1,5 @@
-.github
-.vscode
-bossdocker-base
-bossdocker-installboss
-bossdocker-installboss-cache
-output
-scripts
-scripts-postman
-testing
-workarea
-.gitignore
-LICENSE
-README.md
-versions.txt
+# Ignore everything
+*
+
+# Allow specific files:
+!inputs/*
