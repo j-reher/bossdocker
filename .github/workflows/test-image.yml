@@ -12,6 +12,7 @@ on:
     - 'bossdocker-installboss-cache/Dockerfile'
     - '.github/workflows/test-image.yml'
     - 'bossdocker-base/external/*'
+    - 'inputs/*'
   push:
     branches:
     - main
@@ -23,6 +24,7 @@ on:
     - 'bossdocker-installboss-cache/Dockerfile'
     - '.github/workflows/test-image.yml'
     - 'bossdocker-base/external/*'
+    - 'inputs/*'
 
 jobs:
   lint-bossdocker-dockerfile:
